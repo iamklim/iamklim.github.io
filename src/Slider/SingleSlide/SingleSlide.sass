@@ -1,0 +1,37 @@
+.swiper-slide {
+	width: 20%;
+	background: darkolivegreen;
+}
+.item__img {
+	font-size: 0;
+}
+.item__img img {
+	width: 100%;
+	height: auto;
+}
+
+.item__description--bottom {
+	position: absolute;
+	top: 100%;
+	left: -60%;
+	right: -60%;
+	opacity: 0;
+	transition: opacity .45s ease;
+	text-align: center;
+}
+
+.item__description--top {
+	position: absolute;
+	bottom: 100%;
+	left: -100%;
+	right: -100%;
+	opacity: 0;
+	transition: opacity .45s ease;
+
+	text-align: center;
+}
+
+.swiper-slide-active .item__description--bottom,
+.swiper-slide-active .item__description--top {
+	opacity: 1;
+}
