@@ -1,6 +1,5 @@
 import React from 'react';
-import 'swiper/dist/css/swiper.css';
-import './Slide.css';
+import './SingleSlide.sass';
 
 class SingleSlide extends React.Component {
     constructor(props) {
@@ -8,25 +7,55 @@ class SingleSlide extends React.Component {
     }
 
     render() {
+        //let metascore = isNaN(this.props.movie.metascore) ? '-' : this.props.movie.metascore + '%';
         return (
-            <div className="swiper-slide slide">
-                <div className="slide__img">
+            <div className="swiper-slide item">
+                <div className="item__description item__title">
+                    <span>{this.props.movie.title}</span>
+                </div>
+
+                <div className="item__img">
                     <img src={this.props.movie.poster} alt="Poster" />
+
+                    <div className="item__description item__marks">
+                        <div className=" item__sidebar item__sidebar--imdb">
+                            <span className="item__sidebar-title">IMDb</span>
+                            <span className="item__sidebar-number">{this.props.movie.imdbRating}</span>
+                        </div>
+
+                        {!isNaN(this.props.movie.metascore) &&
+                            <div className="item__sidebar item__sidebar--metascore">
+                                <span className="item__sidebar-title item__sidebar-title--sm">Критики</span>
+                                <span className="item__sidebar-number">{this.props.movie.metascore + '%'}</span>
+                            </div>
+                        }
+
+                        {this.props.movie.trailer_url.length > 0 &&
+                        <div className="item__sidebar item__sidebar--trailer">
+                            <span className="item__sidebar-title item__sidebar-title--sm">Трейлер</span>
+                            <span className="item__sidebar-icon item__sidebar-icon--youtube"/>
+                            <a className="item__sidebar-link" href={this.props.movie.trailer_url} />
+                        </div>
+                        }
+
+                    </div>
                 </div>
-                <div className="slide__title">
-                    <span>
-                        {this.props.movie.title}
-                    </span>
-                </div>
-                <div className="slide__imdbRating">
-                    <span>
-                        {this.props.movie.imdbRating}
-                    </span>
-                </div>
-                <div className="slide__overview">
-                    <span>
-                        {this.props.movie.overview}
-                    </span>
+
+
+                <div className="item__description item__bottom">
+
+                    <div className="item__cast">
+                        <span className="item__director">
+                            Режиссер: <span>{this.props.movie.director}</span>
+                        </span>
+                        <span className="item__actors">
+                            В ролях: <span>{this.props.movie.actors}</span>
+                        </span>
+                    </div>
+
+                    <div className="item__overview">
+                        <span>{this.props.movie.overview}</span>
+                    </div>
                 </div>
             </div>
         );

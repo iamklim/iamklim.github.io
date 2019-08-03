@@ -1,36 +1,25 @@
 import React from 'react';
 import 'swiper/dist/css/swiper.css';
-import './Slide.css';
+import './Slider.sass';
 
-class Slide extends React.Component {
+import SingleSlide from './SingleSlide/SingleSlide';
+
+class Slider extends React.Component {
     constructor(props) {
         super(props);
     }
 
     render() {
         return (
-            <div className="swiper-slide slide">
-                <div className="slide__img">
-                    <img src={this.props.movie.poster} alt="Poster" />
-                </div>
-                <div className="slide__title">
-                    <span>
-                        {this.props.movie.title}
-                    </span>
-                </div>
-                <div className="slide__imdbRating">
-                    <span>
-                        {this.props.movie.imdbRating}
-                    </span>
-                </div>
-                <div className="slide__overview">
-                    <span>
-                        {this.props.movie.overview}
-                    </span>
+            <div className="swiper-container">
+                <div className="swiper-wrapper">
+                    {this.props.movies.map((item, index) => (
+                        <SingleSlide movie={item}/>
+                    ))}
                 </div>
             </div>
         );
     }
 }
 
-export default Slide;
+export default Slider;
