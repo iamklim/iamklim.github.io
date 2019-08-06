@@ -3,18 +3,21 @@ import './App.sass';
 
 import Swiper from 'swiper';
 import Slider from './Slider/Slider';
+import Preloader from "./Preloader/Preloader";
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            movies: []
+            movies: [],
+            contentLoaded: false
         };
         this.getData();
     }
 
     getData() {
         let movieItemsTMDb = [];
+        let genresRu = [];
         const TMDbAPI = "3b07521ea25bf66106a9525b3054c8e9";
         const OMDbAPI = "55018c43";
         const that = this;
@@ -70,11 +73,11 @@ class App extends Component {
                                     trailerUrl = `https://www.youtube.com/watch?v=${lastTrailer.key}`;
                                 }
                             }
-                            //let video_url = `https://www.youtube.com/watch?v=`
-                            //console.log(responseParsed);
+                            console.log(responseParsed);
                             resolve(
                                 movieItemsTMDb[index].imdb_id = responseParsed.imdb_id,
-                                movieItemsTMDb[index].trailer_url = trailerUrl
+                                movieItemsTMDb[index].trailer_url = trailerUrl,
+                                movieItemsTMDb[index].genres = responseParsed.genres
                             );
                         }
                     };
@@ -165,7 +168,8 @@ class App extends Component {
                             modifier: 1,
                             slideShadows : true,
                         },
-                    })
+                    }),
+                    that.setState({contentLoaded: true})
                 )
             });
         }
@@ -184,7 +188,10 @@ class App extends Component {
     render() {
         return (
             <>
-                <Slider movies={this.state.movies} />
+                <Preloader contentLoaded={this.state.contentLoaded}/>
+                <div className="content">
+                    <Slider movies={this.state.movies} />
+                </div>
             </>
         );
     }

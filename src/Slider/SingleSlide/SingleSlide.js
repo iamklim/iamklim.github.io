@@ -8,6 +8,13 @@ class SingleSlide extends React.Component {
 
     render() {
         //let metascore = isNaN(this.props.movie.metascore) ? '-' : this.props.movie.metascore + '%';
+        // let genreList = (
+        //     <ul className="item__genre-list">
+        //         {this.props.movie.genres.map((item) =>
+        //             <li className="item__genre-element">{item}</li>
+        //         )}
+        //     </ul>
+        // );
         return (
             <div className="swiper-slide item">
                 <div className="item__description item__title">
@@ -31,14 +38,23 @@ class SingleSlide extends React.Component {
                         }
 
                         {this.props.movie.trailer_url.length > 0 &&
-                        <div className="item__sidebar item__sidebar--trailer">
-                            <span className="item__sidebar-title item__sidebar-title--sm">Трейлер</span>
-                            <span className="item__sidebar-icon item__sidebar-icon--youtube"/>
-                            <a className="item__sidebar-link" href={this.props.movie.trailer_url} />
-                        </div>
+                            <div className="item__sidebar item__sidebar--trailer">
+                                <span className="item__sidebar-title item__sidebar-title--sm">Трейлер</span>
+                                <span className="item__sidebar-icon item__sidebar-icon--youtube"/>
+                                <a className="item__sidebar-link" href={this.props.movie.trailer_url} />
+                            </div>
                         }
-
                     </div>
+
+                    <div className="item__description item__genres">
+                        {this.props.movie.genres.map((item) =>
+                            <span className="item__genres-element">
+                                <span className={`item__genres-icon item__genres-icon--${item.id}`} />
+                                <span className="item__genres-name" >{item.name}</span>
+                            </span>
+                        )}
+                    </div>
+
                 </div>
 
 
