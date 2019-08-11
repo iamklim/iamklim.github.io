@@ -8,13 +8,16 @@ class SingleSlide extends React.Component {
 
     render() {
         //let metascore = isNaN(this.props.movie.metascore) ? '-' : this.props.movie.metascore + '%';
-        // let genreList = (
-        //     <ul className="item__genre-list">
-        //         {this.props.movie.genres.map((item) =>
-        //             <li className="item__genre-element">{item}</li>
-        //         )}
-        //     </ul>
-        // );
+        const genreList = (
+            <>
+                {this.props.movie.genres.map((item) =>
+                    <div className="item__genre-element">
+                        <div className={`item__genre-icon item__genre-icon--${item.id}`} />
+                        <div className="item__genre-name" >{item.name}</div>
+                    </div>
+                )}
+            </>
+        );
         return (
             <div className="swiper-slide item">
                 <div className="item__description item__title">
@@ -44,16 +47,19 @@ class SingleSlide extends React.Component {
                                 <a className="item__sidebar-link" href={this.props.movie.trailer_url} />
                             </div>
                         }
+
+                        <div className="item__genre">
+                            <div className="item__sidebar item__genre-box item__genre-box--sm">
+                                {genreList}
+                            </div>
+                            <div className="item__sidebar item__genre-box item__genre-box--lg">
+                                {genreList}
+                            </div>
+                        </div>
+
                     </div>
 
-                    <div className="item__description item__genres">
-                        {this.props.movie.genres.map((item) =>
-                            <span className="item__genres-element">
-                                <span className={`item__genres-icon item__genres-icon--${item.id}`} />
-                                <span className="item__genres-name" >{item.name}</span>
-                            </span>
-                        )}
-                    </div>
+
 
                 </div>
 

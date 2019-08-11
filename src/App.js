@@ -17,7 +17,6 @@ class App extends Component {
 
     getData() {
         let movieItemsTMDb = [];
-        let genresRu = [];
         const TMDbAPI = "3b07521ea25bf66106a9525b3054c8e9";
         const OMDbAPI = "55018c43";
         const that = this;
@@ -73,7 +72,7 @@ class App extends Component {
                                     trailerUrl = `https://www.youtube.com/watch?v=${lastTrailer.key}`;
                                 }
                             }
-                            console.log(responseParsed);
+                            //console.log(responseParsed);
                             resolve(
                                 movieItemsTMDb[index].imdb_id = responseParsed.imdb_id,
                                 movieItemsTMDb[index].trailer_url = trailerUrl,
@@ -103,7 +102,7 @@ class App extends Component {
                     xhr.onreadystatechange = function() {
                         if (this.readyState === this.DONE) {
                             const responseParsed = JSON.parse(this.responseText);
-                            //console.log(responseParsed)
+                            console.log(responseParsed)
                             if (isNaN(responseParsed.imdbRating)) {
                                 responseParsed.imdbRating = '-';
                             }
