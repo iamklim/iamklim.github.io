@@ -64,7 +64,7 @@ class App extends Component {
         async function getOMDbInfo() {
             for (let i = 0; i < movieItemsTMDb.length; i++) {
                 let currIMDbId = movieItemsTMDb[i].imdb_id;
-                let requestOMDb = `http://www.omdbapi.com/?i=${currIMDbId}&apikey=${OMDbAPI}`;
+                let requestOMDb = `https://www.omdbapi.com/?i=${currIMDbId}&apikey=${OMDbAPI}`;
 
                 const movieInfo = await ajaxRequest(requestOMDb);
 
@@ -153,7 +153,6 @@ class App extends Component {
                     in={!this.state.contentLoading}
                     timeout={1000}
                     classNames="animation"
-                    appear
                 >
                     <div className="content">
                         <Slider movies={this.state.movies} />
