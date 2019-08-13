@@ -12,3 +12,22 @@ body
   align-items: center
   min-height: 100vh
   position: relative
+
+
+// CSS Transition animation
+.animation
+  &-appear,
+  &-enter
+    opacity: 0
+  &-appear-active
+    transition: opacity 1000ms
+  &-enter-active
+    transition: opacity 500ms
+  &-appear-active,
+  &-enter-active
+    opacity: 1
+  &-exit
+    opacity: 1
+  &-exit-active
+    opacity: 0
+    transition: opacity 500ms

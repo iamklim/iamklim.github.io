@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import { ajaxRequest } from './ajaxRequest';
+
 import './App.sass';
 import { CSSTransition } from 'react-transition-group';
 
@@ -22,28 +24,12 @@ class App extends Component {
         const TMDbAPI = "3b07521ea25bf66106a9525b3054c8e9";
         const OMDbAPI = "55018c43";
         const that = this;
-        
-        function makeAjaxRequest(url) {
-            return new Promise(function(resolve, reject) {
-                let xhr = new XMLHttpRequest();
-
-                xhr.open("GET", url, true);
-                xhr.send();
-
-                xhr.onreadystatechange = function() {
-                    if (this.readyState === this.DONE) {
-                        const responseParsed = JSON.parse(this.responseText);
-                        resolve(responseParsed);
-                    }
-                };
-            });
-        }
 
         async function getNowPlaying() {
             const requestTMDb = `https://api.themoviedb.org/3/movie/now_playing?region=UA&language=ru-RU&api_key=${TMDbAPI}`;
             const posterPath = `https://image.tmdb.org/t/p/original`; // lower resolution: https://image.tmdb.org/t/p/w370_and_h556_bestv2
 
-            const nowPlaying = await makeAjaxRequest(requestTMDb);
+            const nowPlaying = await ajaxRequest(requestTMDb);
             const nowPlayingResults = nowPlaying.results;
 
             nowPlayingResults.forEach((item) => {
@@ -57,7 +43,7 @@ class App extends Component {
                 let currTMDbId = movieItemsTMDb[i].id;
                 let requestTMDb = `https://api.themoviedb.org/3/movie/${currTMDbId}?api_key=${TMDbAPI}&append_to_response=external_ids,videos&language=ru-RU`;
 
-                const movieInfo = await makeAjaxRequest(requestTMDb);
+                const movieInfo = await ajaxRequest(requestTMDb);
 
                 let trailers = movieInfo.videos.results,
                     trailerUrl = '';
@@ -80,7 +66,7 @@ class App extends Component {
                 let currIMDbId = movieItemsTMDb[i].imdb_id;
                 let requestOMDb = `http://www.omdbapi.com/?i=${currIMDbId}&apikey=${OMDbAPI}`;
 
-                const movieInfo = await makeAjaxRequest(requestOMDb);
+                const movieInfo = await ajaxRequest(requestOMDb);
 
                 if (isNaN(movieInfo.imdbRating)) { // may be "N/A"
                     movieInfo.imdbRating = '-';
@@ -119,7 +105,6 @@ class App extends Component {
 
         async function initSlider() {
             return new Promise(function(resolve, reject) {
-                resolve(
                     new Swiper('.swiper-container', {
                         effect: 'coverflow',
                         centeredSlides: true,
@@ -133,9 +118,10 @@ class App extends Component {
                             modifier: 1,
                             slideShadows : true,
                         },
-                    }),
-                    that.setState({contentLoading: false})
-                )
+                    });
+                    resolve(
+                        that.setState({contentLoading: false})
+                    )
             });
         }
 
@@ -159,14 +145,20 @@ class App extends Component {
                     timeout={500}
                     classNames="animation"
                     unmountOnExit
-                    appear
                 >
                     <Preloader/>
                 </CSSTransition>
 
-                <div className="content">
-                    <Slider movies={this.state.movies} />
-                </div>
+                <CSSTransition
+                    in={!this.state.contentLoading}
+                    timeout={1000}
+                    classNames="animation"
+                    appear
+                >
+                    <div className="content">
+                        <Slider movies={this.state.movies} />
+                    </div>
+                </CSSTransition>
             </>
         );
     }
