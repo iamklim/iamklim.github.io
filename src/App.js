@@ -21,71 +21,63 @@ class App extends Component {
         const OMDbAPI = "55018c43";
         const that = this;
 
+
+        function makeAjaxRequest(url) {
+            return new Promise(function(resolve, reject) {
+                let xhr = new XMLHttpRequest();
+
+                xhr.onreadystatechange = function() {
+                    if (this.readyState === this.DONE) {
+                        const responseParsed = JSON.parse(this.responseText);
+                        resolve(
+                           responseParsed
+                        )
+                    }
+                };
+
+                xhr.open("GET", url);
+                xhr.send();
+            });
+        }
+
         async function getNowPlaying() {
 
-             function makeAjaxRequest() {
-                 return new Promise(function(resolve, reject) {
-                    let requestTMDb = `https://api.themoviedb.org/3/movie/now_playing?region=UA&language=ru-RU&api_key=${TMDbAPI}`;
-                    let posterPath = `https://image.tmdb.org/t/p/original`; // lower resolution: https://image.tmdb.org/t/p/w370_and_h556_bestv2
-                    let xhr = new XMLHttpRequest();
+            const requestTMDb = `https://api.themoviedb.org/3/movie/now_playing?region=UA&language=ru-RU&api_key=${TMDbAPI}`;
+            const posterPath = `https://image.tmdb.org/t/p/original`; // lower resolution: https://image.tmdb.org/t/p/w370_and_h556_bestv2
 
-                    xhr.open("GET", requestTMDb);
-                    xhr.send();
+            const nowPlaying = await makeAjaxRequest(requestTMDb);
+            const nowPlayingResults = nowPlaying.results;
 
-                    xhr.onreadystatechange = function() {
-                        if (this.readyState === this.DONE) {
-                            const responseParsed = JSON.parse(this.responseText);
-                            const responseResults = responseParsed.results;
-                            //console.log(responseResults);
-                            resolve(
-                                responseResults.forEach((item) => {
-                                    item.poster = posterPath + item.poster_path;
-                                    movieItemsTMDb.push(item);
-                                })
-                            );
-                        }
-                    };
-                 });
-            }
-            await makeAjaxRequest();
+            nowPlayingResults.forEach((item) => {
+                item.poster = posterPath + item.poster_path;
+                movieItemsTMDb.push(item);
+            });
+
         }
 
         async function getIMDbId() {
 
-            function makeAjaxRequest(index) {
-                return new Promise(function(resolve, reject) {
-                    let currTMDbId = movieItemsTMDb[index].id;
-                    let requestTMDb = `https://api.themoviedb.org/3/movie/${currTMDbId}?api_key=${TMDbAPI}&append_to_response=external_ids,videos&language=ru-RU`;
-
-                    let xhr = new XMLHttpRequest();
-                    xhr.open("GET", requestTMDb);
-                    xhr.send();
-
-                    xhr.onreadystatechange = function() {
-                        if (this.readyState === this.DONE) {
-                            const responseParsed = JSON.parse(this.responseText);
-                            let trailers = responseParsed.videos.results,
-                                trailerUrl = '';
-                            if (trailers.length > 0) {
-                                let lastTrailer = trailers[trailers.length - 1];
-                                if (lastTrailer.site === "YouTube") {
-                                    trailerUrl = `https://www.youtube.com/watch?v=${lastTrailer.key}`;
-                                }
-                            }
-                            //console.log(responseParsed);
-                            resolve(
-                                movieItemsTMDb[index].imdb_id = responseParsed.imdb_id,
-                                movieItemsTMDb[index].trailer_url = trailerUrl,
-                                movieItemsTMDb[index].genres = responseParsed.genres
-                            );
-                        }
-                    };
-                });
-            }
-
             for (let i = 0; i < movieItemsTMDb.length; i++) {
-                await makeAjaxRequest(i);
+                let currTMDbId = movieItemsTMDb[i].id;
+                let requestTMDb = `https://api.themoviedb.org/3/movie/${currTMDbId}?api_key=${TMDbAPI}&append_to_response=external_ids,videos&language=ru-RU`;
+
+                const movieInfo = await makeAjaxRequest(requestTMDb);
+
+                let trailers = movieInfo.videos.results,
+                    trailerUrl = '';
+                if (trailers.length > 0) {
+                    let lastTrailer = trailers[trailers.length - 1];
+                    if (lastTrailer.site === "YouTube") {
+                        trailerUrl = `https://www.youtube.com/watch?v=${lastTrailer.key}`;
+                    }
+                }
+
+                movieItemsTMDb[i].imdb_id = movieInfo.imdb_id;
+                movieItemsTMDb[i].trailer_url = trailerUrl;
+                movieItemsTMDb[i].genres = movieInfo.genres;
             }
+
+            console.log(movieItemsTMDb);
         }
 
         async function getIMDbRating() {
@@ -176,10 +168,10 @@ class App extends Component {
         (async function(){
             await getNowPlaying();
             await getIMDbId();
-            await getIMDbRating();
-            await sortByRating();
-            await updateState();
-            await initSlider();
+            // await getIMDbRating();
+            // await sortByRating();
+            // await updateState();
+            // await initSlider();
         })();
 
     }
