@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.e303b443.chunk.css",
+    "main.css": "/static/css/main.30cff6a9.chunk.css",
     "main.js": "/static/js/main.de2b9835.chunk.js",
     "main.js.map": "/static/js/main.de2b9835.chunk.js.map",
     "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
@@ -9,10 +9,10 @@
     "static/js/2.f7c12183.chunk.js": "/static/js/2.f7c12183.chunk.js",
     "static/js/2.f7c12183.chunk.js.map": "/static/js/2.f7c12183.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.f9ddc1def0e224f602cc82df89592fd9.js": "/precache-manifest.f9ddc1def0e224f602cc82df89592fd9.js",
+    "precache-manifest.52acee3ff051201f8356ba711bd02016.js": "/precache-manifest.52acee3ff051201f8356ba711bd02016.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.dce8a878.chunk.css.map": "/static/css/2.dce8a878.chunk.css.map",
-    "static/css/main.e303b443.chunk.css.map": "/static/css/main.e303b443.chunk.css.map",
+    "static/css/main.30cff6a9.chunk.css.map": "/static/css/main.30cff6a9.chunk.css.map",
     "static/media/SingleSlide.sass": "/static/media/youtube.73d79617.svg"
   }
 }
