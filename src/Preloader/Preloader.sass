@@ -6,10 +6,6 @@
 	left: 0
 	background: #000
 	z-index: 4
-	opacity: 1
-	transition: opacity .6s ease
-	&--hidden
-		opacity: 0
 
 	&__spinner
 		position: absolute
@@ -42,3 +38,16 @@
 	100%
 		transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg)
 		-webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg)
+
+// CSS Transition animation
+.animation
+	&-enter
+		opacity: 0
+	&-enter-active
+		opacity: 1
+		transition: opacity 500ms
+	&-exit
+		opacity: 1
+	&-exit-active
+		opacity: 0
+		transition: opacity 500ms

@@ -7,18 +7,8 @@ class Preloader extends React.Component {
     }
 
     render() {
-        let loader = document.getElementById('loader'),
-            loaderClass = 'loader';
-
-        if (this.props.contentLoaded) {
-            loaderClass += ' loader--hidden';
-            setTimeout(function () {
-                loader.style.display = 'none'
-            }, 610)
-        }
-
         return (
-            <div className={loaderClass} id="loader">
+            <div className="loader">
                 <div className="loader__spinner">
                     <div className="loader__spinner-square"  />
                 </div>

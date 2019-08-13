@@ -11,7 +11,7 @@ class SingleSlide extends React.Component {
         const genreList = (
             <>
                 {this.props.movie.genres.map((item) =>
-                    <div className="item__genre-element">
+                    <div key={item.id} className="item__genre-element">
                         <div className={`item__genre-icon item__genre-icon--${item.id}`} />
                         <div className="item__genre-name" >{item.name}</div>
                     </div>

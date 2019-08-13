@@ -1,16 +1,18 @@
 import React, {Component} from 'react';
 import './App.sass';
+import { CSSTransition } from 'react-transition-group';
 
 import Swiper from 'swiper';
 import Slider from './Slider/Slider';
 import Preloader from "./Preloader/Preloader";
+
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
             movies: [],
-            contentLoaded: false
+            contentLoading: true
         };
         this.getData();
     }
@@ -20,28 +22,24 @@ class App extends Component {
         const TMDbAPI = "3b07521ea25bf66106a9525b3054c8e9";
         const OMDbAPI = "55018c43";
         const that = this;
-
-
+        
         function makeAjaxRequest(url) {
             return new Promise(function(resolve, reject) {
                 let xhr = new XMLHttpRequest();
 
+                xhr.open("GET", url, true);
+                xhr.send();
+
                 xhr.onreadystatechange = function() {
                     if (this.readyState === this.DONE) {
                         const responseParsed = JSON.parse(this.responseText);
-                        resolve(
-                           responseParsed
-                        )
+                        resolve(responseParsed);
                     }
                 };
-
-                xhr.open("GET", url);
-                xhr.send();
             });
         }
 
         async function getNowPlaying() {
-
             const requestTMDb = `https://api.themoviedb.org/3/movie/now_playing?region=UA&language=ru-RU&api_key=${TMDbAPI}`;
             const posterPath = `https://image.tmdb.org/t/p/original`; // lower resolution: https://image.tmdb.org/t/p/w370_and_h556_bestv2
 
@@ -52,11 +50,9 @@ class App extends Component {
                 item.poster = posterPath + item.poster_path;
                 movieItemsTMDb.push(item);
             });
-
         }
 
-        async function getIMDbId() {
-
+        async function getTMDbInfo() {
             for (let i = 0; i < movieItemsTMDb.length; i++) {
                 let currTMDbId = movieItemsTMDb[i].id;
                 let requestTMDb = `https://api.themoviedb.org/3/movie/${currTMDbId}?api_key=${TMDbAPI}&append_to_response=external_ids,videos&language=ru-RU`;
@@ -77,44 +73,24 @@ class App extends Component {
                 movieItemsTMDb[i].genres = movieInfo.genres;
             }
 
-            console.log(movieItemsTMDb);
         }
 
-        async function getIMDbRating() {
-
-            function makeAjaxRequest(index) {
-                return new Promise(function(resolve, reject) {
-                    let currIMDbId = movieItemsTMDb[index].imdb_id;
-                    let requestOMDb = `http://www.omdbapi.com/?i=${currIMDbId}&apikey=${OMDbAPI}`;
-
-                    let xhr = new XMLHttpRequest();
-                    xhr.open("GET", requestOMDb);
-                    xhr.send();
-
-                    xhr.onreadystatechange = function() {
-                        if (this.readyState === this.DONE) {
-                            const responseParsed = JSON.parse(this.responseText);
-                            console.log(responseParsed)
-                            if (isNaN(responseParsed.imdbRating)) {
-                                responseParsed.imdbRating = '-';
-                            }
-
-                            resolve (
-                                movieItemsTMDb[index].imdbRating = responseParsed.imdbRating, // may be "N/A"
-                                movieItemsTMDb[index].director = responseParsed.Director,
-                                movieItemsTMDb[index].actors = responseParsed.Actors,
-                                movieItemsTMDb[index].metascore = responseParsed.Metascore // may be "N/A"
-                            );
-
-                        }
-                    };
-                });
-            }
-
+        async function getOMDbInfo() {
             for (let i = 0; i < movieItemsTMDb.length; i++) {
-                await makeAjaxRequest(i);
-            }
+                let currIMDbId = movieItemsTMDb[i].imdb_id;
+                let requestOMDb = `http://www.omdbapi.com/?i=${currIMDbId}&apikey=${OMDbAPI}`;
 
+                const movieInfo = await makeAjaxRequest(requestOMDb);
+
+                if (isNaN(movieInfo.imdbRating)) { // may be "N/A"
+                    movieInfo.imdbRating = '-';
+                }
+
+                movieItemsTMDb[i].imdbRating = movieInfo.imdbRating;
+                movieItemsTMDb[i].director = movieInfo.Director;
+                movieItemsTMDb[i].actors = movieInfo.Actors;
+                movieItemsTMDb[i].metascore = movieInfo.Metascore; // may be "N/A"
+            }
         }
 
         async function sortByRating() {
@@ -133,14 +109,12 @@ class App extends Component {
         }
 
         async function updateState() {
-            function setNewState() {
-                return new Promise(function(resolve, reject) {
-                    JSON.stringify(movieItemsTMDb);
-                    resolve(that.setState({movies: movieItemsTMDb}))
-                });
-            }
-            await setNewState();
-            console.log(that.state);
+            return new Promise(function(resolve, reject) {
+                JSON.stringify(movieItemsTMDb);
+                resolve(
+                    that.setState({movies: movieItemsTMDb})
+                )
+            });
         }
 
         async function initSlider() {
@@ -160,26 +134,36 @@ class App extends Component {
                             slideShadows : true,
                         },
                     }),
-                    that.setState({contentLoaded: true})
+                    that.setState({contentLoading: false})
                 )
             });
         }
 
         (async function(){
             await getNowPlaying();
-            await getIMDbId();
-            // await getIMDbRating();
-            // await sortByRating();
-            // await updateState();
-            // await initSlider();
+            await getTMDbInfo();
+            await getOMDbInfo();
+            await sortByRating();
+            await updateState();
+            await initSlider();
         })();
 
     }
 
     render() {
+
         return (
             <>
-                <Preloader contentLoaded={this.state.contentLoaded}/>
+                <CSSTransition
+                    in={this.state.contentLoading}
+                    timeout={500}
+                    classNames="animation"
+                    unmountOnExit
+                    appear
+                >
+                    <Preloader/>
+                </CSSTransition>
+
                 <div className="content">
                     <Slider movies={this.state.movies} />
                 </div>
