@@ -1,5 +1,6 @@
 import React from 'react';
 import './SingleSlide.sass';
+import emptyPoster from '../../assets/img/empty-poster.png';
 
 class SingleSlide extends React.Component {
     constructor(props) {
@@ -18,6 +19,11 @@ class SingleSlide extends React.Component {
                 )}
             </>
         );
+        const posterSrc = this.props.movie.poster !== null ? (
+                this.props.movie.poster
+            ) : (
+                emptyPoster
+            );
         return (
             <div className="swiper-slide item">
                 <div className="item__description item__title">
@@ -25,7 +31,7 @@ class SingleSlide extends React.Component {
                 </div>
 
                 <div className="item__img">
-                    <img src={this.props.movie.poster} alt="Poster" />
+                    <img src={posterSrc} alt="Poster" />
 
                     <div className="item__description item__marks">
                         <div className=" item__sidebar item__sidebar--imdb">

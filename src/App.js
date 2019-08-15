@@ -29,13 +29,23 @@ class App extends Component {
             const requestTMDb = `https://api.themoviedb.org/3/movie/now_playing?region=UA&language=ru-RU&api_key=${TMDbAPI}`;
             const posterPath = `https://image.tmdb.org/t/p/original`; // lower resolution: https://image.tmdb.org/t/p/w370_and_h556_bestv2
 
-            const nowPlaying = await ajaxRequest(requestTMDb);
-            const nowPlayingResults = nowPlaying.results;
+            await Promise.all([ajaxRequest(requestTMDb), ajaxRequest(`${requestTMDb}&page=2`)])
+                .then(([nowPlayingPage1, nowPlayingPage2]) => {
+                    let nowPlayingPage1Results = nowPlayingPage1.results;
+                    let nowPlayingPage2Results = nowPlayingPage2.results.splice(-1,1); // to avoid maximum limit of 40 requests in API
+                    let nowPlayingResults = nowPlayingPage1Results.concat(nowPlayingPage2Results);
 
-            nowPlayingResults.forEach((item) => {
-                item.poster = posterPath + item.poster_path;
-                movieItemsTMDb.push(item);
-            });
+                    nowPlayingResults.forEach((item) => {
+                        if (item.poster_path === null) {
+                            item.poster = null;
+                        }
+                        else {
+                            item.poster = posterPath + item.poster_path;
+                        }
+
+                        movieItemsTMDb.push(item);
+                    });
+                });
         }
 
         async function getTMDbInfo() {
