@@ -16,10 +16,9 @@ class App extends Component {
             movies: [],
             contentLoading: true
         };
-        this.getData();
     }
 
-    getData() {
+    componentDidMount() {
         let movieItemsTMDb = [];
         const TMDbAPI = "3b07521ea25bf66106a9525b3054c8e9";
         const OMDbAPI = "55018c43";
@@ -128,10 +127,14 @@ class App extends Component {
                             modifier: 1,
                             slideShadows : true,
                         },
+                        on: {
+                            init: function() {
+                                resolve(
+                                    that.setState({contentLoading: false})
+                                )
+                            }
+                        }
                     });
-                    resolve(
-                        that.setState({contentLoading: false})
-                    )
             });
         }
 
