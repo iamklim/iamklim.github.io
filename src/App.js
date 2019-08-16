@@ -115,23 +115,54 @@ class App extends Component {
 
         async function initSlider() {
             return new Promise(function(resolve, reject) {
-                    new Swiper('.swiper-container', {
-                        effect: 'coverflow',
-                        centeredSlides: true,
-                        slidesPerView: 'auto',
-                        mousewheel: true,
-                        keyboard: true,
-                        coverflowEffect: {
-                            rotate: 20,
-                            stretch: 0,
-                            depth: 100,
-                            modifier: 1,
-                            slideShadows : true,
+                new Swiper('.swiper-container', {
+                    effect: 'coverflow',
+                    centeredSlides: true,
+                    slidesPerView: 'auto',
+                    mousewheel: true,
+                    keyboard: true,
+                    coverflowEffect: {
+                        rotate: 20,
+                        stretch: 0,
+                        depth: 100,
+                        modifier: 1,
+                        slideShadows : true,
+                    },
+                    on: {
+                        init: function() {
+                            let currSlideIndex = this.activeIndex;
+                            let currSlide = this.slides[currSlideIndex];
+                            let currItemDesc = currSlide.getElementsByClassName('item__description');
+
+                            Array.from(currItemDesc).forEach((item) => {
+                                console.log(item);
+                                item.style.opacity = 1;
+                            });
+
+                            resolve(
+                                that.setState({contentLoading: false})
+                            )
                         },
-                    });
-                    resolve(
-                        that.setState({contentLoading: false})
-                    )
+                        slideChange: function() {
+                            let allItemDesc = document.getElementsByClassName('item__description');
+
+                            Array.from(allItemDesc).forEach((item) => {
+                                item.style.opacity = 0;
+                            });
+
+                            let currSlideIndex = this.activeIndex;
+                            let currSlide = this.slides[currSlideIndex];
+                            let currItemDesc = currSlide.getElementsByClassName('item__description');
+
+                            Array.from(currItemDesc).forEach((item) => {
+                                console.log(item);
+                                item.style.opacity = 1;
+                            });
+
+                        }
+                    }
+                });
+
             });
         }
 
