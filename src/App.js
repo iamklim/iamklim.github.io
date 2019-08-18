@@ -31,7 +31,7 @@ class App extends Component {
             await Promise.all([ajaxRequest(requestTMDb), ajaxRequest(`${requestTMDb}&page=2`)])
                 .then(([nowPlayingPage1, nowPlayingPage2]) => {
                     let nowPlayingPage1Results = nowPlayingPage1.results;
-                    let nowPlayingPage2Results = nowPlayingPage2.results.splice(-1,1); // to avoid maximum limit of 40 requests in API
+                    let nowPlayingPage2Results = nowPlayingPage2.results;
                     let nowPlayingResults = nowPlayingPage1Results.concat(nowPlayingPage2Results);
 
                     nowPlayingResults.forEach((item) => {
@@ -85,6 +85,7 @@ class App extends Component {
                 movieItemsTMDb[i].director = movieInfo.Director;
                 movieItemsTMDb[i].actors = movieInfo.Actors;
                 movieItemsTMDb[i].metascore = movieInfo.Metascore; // may be "N/A"
+                movieItemsTMDb[i].year = movieInfo.Year;
             }
         }
 
@@ -167,9 +168,18 @@ class App extends Component {
                     timeout={1000}
                     classNames="animation"
                 >
-                    <div className="content">
-                        <Slider movies={this.state.movies} />
-                    </div>
+                    <>
+                        <div className="content">
+                            <div className="credentials">
+                                <p>Made by Vladyslav Klymenko</p>
+                                <a href="https://www.linkedin.com/in/vladklymenko/">LinkedIn</a>
+                                &nbsp;
+                                <a href="mailto:drkleem@gmail.com">drkleem@gmail.com</a>
+                            </div>
+                            <Slider movies={this.state.movies} />
+                        </div>
+
+                    </>
                 </CSSTransition>
             </>
         );

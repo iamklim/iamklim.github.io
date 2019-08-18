@@ -3,12 +3,8 @@ import './SingleSlide.sass';
 import emptyPoster from '../../assets/img/empty-poster.png';
 
 class SingleSlide extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
-        //let metascore = isNaN(this.props.movie.metascore) ? '-' : this.props.movie.metascore + '%';
         const genreList = (
             <>
                 {this.props.movie.genres.map((item) =>
@@ -27,7 +23,7 @@ class SingleSlide extends React.Component {
         return (
             <div className="swiper-slide item">
                 <div className="item__description item__title">
-                    <span>{this.props.movie.title}</span>
+                    <span>{`${this.props.movie.title} (${this.props.movie.year})`}</span>
                 </div>
 
                 <div className="item__img">
@@ -50,7 +46,7 @@ class SingleSlide extends React.Component {
                             <div className="item__sidebar item__sidebar--trailer">
                                 <span className="item__sidebar-title item__sidebar-title--sm">Трейлер</span>
                                 <span className="item__sidebar-icon item__sidebar-icon--youtube"/>
-                                <a className="item__sidebar-link" href={this.props.movie.trailer_url} />
+                                <a className="item__sidebar-link" href={this.props.movie.trailer_url}>Youtube</a>
                             </div>
                         }
 

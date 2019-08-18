@@ -2,9 +2,6 @@ import React from 'react';
 import './Preloader.sass';
 
 class Preloader extends React.Component {
-    constructor(props) {
-        super(props)
-    }
 
     render() {
         return (

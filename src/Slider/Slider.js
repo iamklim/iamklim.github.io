@@ -5,9 +5,6 @@ import './Slider.sass';
 import SingleSlide from './SingleSlide/SingleSlide';
 
 class Slider extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         return (

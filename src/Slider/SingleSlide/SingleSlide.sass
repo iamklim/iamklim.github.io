@@ -1,6 +1,5 @@
 .swiper-slide
 	width: 20%
-	//background: darkolivegreen
 	@media (max-width: 1024px)
 		width: 30%
 	@media (max-width: 768px)
@@ -11,14 +10,13 @@
 .item
 	&__img
 		position: relative
-		-webkit-transform: translateZ(0px) // to fix bug with overflowing during transition in ios Safari
+		-webkit-transform: translateZ(0px) // to avoid bug with blinking during slide change in ios Safari
 		img
 			display: block
 			width: 100%
 			height: auto
 
 	&__description
-		// position: absolute
 		opacity: 0
 		transition: opacity .45s ease
 		text-align: center
@@ -76,6 +74,7 @@
 			left: 0
 			right: 0
 			bottom: 0
+			font-size: 0
 			z-index: 1
 
 		&-icon
