@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Now playing",
+  "name": "Now playing in Ukriane",
   "icons": [
     {
       "src": "favicon.ico",
