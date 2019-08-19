@@ -29,6 +29,9 @@ class SingleSlide extends React.Component {
                 <div className="item__img">
                     <img src={posterSrc} alt="Poster" />
 
+                    {/*<div className="item__shadow item__shadow--left" />*/}
+                    {/*<div className="item__shadow item__shadow--right" />*/}
+
                     <div className="item__description item__marks">
                         <div className=" item__sidebar item__sidebar--imdb">
                             <span className="item__sidebar-title">IMDb</span>
