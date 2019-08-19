@@ -23,6 +23,7 @@ class App extends Component {
         const TMDbAPI = "3b07521ea25bf66106a9525b3054c8e9";
         const OMDbAPI = "55018c43";
         const that = this;
+        let count = 0;
 
         async function getNowPlaying() {
             const requestTMDb = `https://api.themoviedb.org/3/movie/now_playing?region=UA&language=ru-RU&api_key=${TMDbAPI}`;
@@ -31,8 +32,10 @@ class App extends Component {
             await Promise.all([ajaxRequest(requestTMDb), ajaxRequest(`${requestTMDb}&page=2`)])
                 .then(([nowPlayingPage1, nowPlayingPage2]) => {
                     let nowPlayingPage1Results = nowPlayingPage1.results;
-                    let nowPlayingPage2Results = nowPlayingPage2.results;
+                    let nowPlayingPage2Results = nowPlayingPage2.results.slice(0, nowPlayingPage2.results.length - 2); // to avoid TMDb API 40 requests limit
                     let nowPlayingResults = nowPlayingPage1Results.concat(nowPlayingPage2Results);
+
+                    console.log(nowPlayingPage2Results);
 
                     nowPlayingResults.forEach((item) => {
                         if (item.poster_path === null) {
@@ -52,6 +55,9 @@ class App extends Component {
                 let currTMDbId = movieItemsTMDb[i].id;
                 let requestTMDb = `https://api.themoviedb.org/3/movie/${currTMDbId}?api_key=${TMDbAPI}&append_to_response=external_ids,videos&language=ru-RU`;
 
+                console.log(movieItemsTMDb[i]);
+                count += 1;
+                console.log(`request ${count}`);
                 const movieInfo = await ajaxRequest(requestTMDb);
 
                 let trailers = movieInfo.videos.results,
