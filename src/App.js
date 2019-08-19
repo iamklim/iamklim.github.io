@@ -126,7 +126,7 @@ class App extends Component {
                             stretch: 0,
                             depth: 100,
                             modifier: 1,
-                            slideShadows : true,
+                            slideShadows : false,
                         },
                         on: {
                             init: function() {
