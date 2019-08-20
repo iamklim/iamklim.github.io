@@ -121,6 +121,8 @@ class App extends Component {
                         slidesPerView: 'auto',
                         mousewheel: true,
                         keyboard: true,
+                        grabCursor: true,
+                        longSwipesRatio: 1,
                         coverflowEffect: {
                             rotate: 20,
                             stretch: 0,
