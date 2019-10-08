@@ -8,6 +8,7 @@ import getOMDbInfo from './services/getOMDbInfo';
 
 import Slider from './Slider/Slider';
 import Preloader from "./Preloader/Preloader";
+import ErrorFallback from './ErrorFallback/ErrorFallback';
 
 import './App.sass';
 
@@ -17,6 +18,8 @@ function App() {
     const [ TMDbInfoReceived, setTMDbInfoReceived ] = useState(false);
     const [ OMDbInfoReceived, setOMDbInfoReceived ] = useState(false);
     const [ moviesAreSorted, setMoviesAreSorted ] = useState(false);
+    const [ sliderInited, setSliderInited ] = useState(false);
+    const [ answerReceived, setAnswerReceived ] = useState(false);
     const [ contentIsLoaded, setContentIsLoaded ] = useState(false);
   
     const TMDbAPI = "3b07521ea25bf66106a9525b3054c8e9";
@@ -38,6 +41,12 @@ function App() {
             slidesPerView: 'auto',
             mousewheel: true,
             keyboard: true,
+            slideToClickedSlide: true,
+            scrollbar: {
+                el: '.swiper-scrollbar',
+                draggable: true,
+                hide: true,
+              },
             coverflowEffect: {
                 rotate: 20,
                 stretch: 0,
@@ -47,15 +56,14 @@ function App() {
             },
             on: {
                 init: function() {
-                    setContentIsLoaded(true)
+                    setSliderInited(true);
                 }
             }
         });
-
     }
 
     useEffect(() => {
-        getNowPlaying(TMDbAPI, setMovies, setNowPlayingReceived);
+        getNowPlaying(TMDbAPI, setMovies, setNowPlayingReceived, setAnswerReceived);
     }, []);
 
     useEffect(()=>{
@@ -82,22 +90,38 @@ function App() {
         }
     }, [moviesAreSorted]);
 
+    useEffect(()=>{
+        if (sliderInited && movies.length) {
+            setContentIsLoaded(true);
+            setAnswerReceived(true);
+        }
+    }, [sliderInited]);
+
     // eslint-disable-next-line
     // useEffect(()=>{
     //     console.log('-----------------------------------------------------------------');
     //     console.log('nowPlayingReceived',nowPlayingReceived);
     //     console.log('TMDbInfoReceived',TMDbInfoReceived);
     //     console.log('moviesAreSorted',moviesAreSorted);
+    //     console.log('contentIsLoaded',contentIsLoaded);
+    //     console.log('answerReceived',answerReceived);
     //     console.log(movies);
-    //     console.log('nowPlayingReceived',nowPlayingReceived);
-    //     console.log('TMDbInfoReceived',TMDbInfoReceived);
-    //     console.log('moviesAreSorted',moviesAreSorted);
     // })
 
     return (
         <>
+            <div className={`content ${contentIsLoaded && answerReceived ? 'content--visible' : ''}`}>
+                <div className="credentials">
+                    <p>Made by Vladyslav Klymenko</p>
+                    <a href="https://www.linkedin.com/in/vladklymenko/">LinkedIn</a>
+                    &nbsp;
+                    <a href="mailto:drkleem@gmail.com">drkleem@gmail.com</a>
+                </div>
+                <Slider movies={movies} moviesAreSorted={moviesAreSorted} />
+            </div>
+
             <CSSTransition
-                in={!contentIsLoaded}
+                in={!contentIsLoaded && !answerReceived}
                 timeout={500}
                 classNames="animation"
                 unmountOnExit
@@ -106,19 +130,13 @@ function App() {
             </CSSTransition>
 
             <CSSTransition
-                in={contentIsLoaded }
+                in={!contentIsLoaded && answerReceived}
                 timeout={1000}
                 classNames="animation"
+                mountOnEnter
+                unmountOnExit
             >
-                <div className="content">
-                    <div className="credentials">
-                        <p>Made by Vladyslav Klymenko</p>
-                        <a href="https://www.linkedin.com/in/vladklymenko/">LinkedIn</a>
-                        &nbsp;
-                        <a href="mailto:drkleem@gmail.com">drkleem@gmail.com</a>
-                    </div>
-                    <Slider movies={movies} moviesAreSorted={moviesAreSorted} />
-                </div>
+                <ErrorFallback />
             </CSSTransition>
         </>
     );

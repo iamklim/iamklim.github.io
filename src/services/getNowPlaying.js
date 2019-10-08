@@ -1,6 +1,6 @@
 import ajaxRequest from './ajaxRequest';
 
-const getNowPlaying = (apiKey, updateMovies, setFinish) => {
+const getNowPlaying = (apiKey, updateMovies, setNowPlayingReceived, setAnswerReceived) => {
     const requestTMDb = `https://api.themoviedb.org/3/movie/now_playing?region=UA&language=ru-RU&api_key=${apiKey}`;
     const posterPath = `https://image.tmdb.org/t/p/original`; // lower resolution: https://image.tmdb.org/t/p/w370_and_h556_bestv2
     
@@ -30,7 +30,11 @@ const getNowPlaying = (apiKey, updateMovies, setFinish) => {
             updateMovies(nowPlayingResults);
         })
         .then(() => {
-            setFinish(true);
+            setNowPlayingReceived(true);
+        })
+        .catch(() => {
+            setNowPlayingReceived(false);
+            setAnswerReceived(true);
         });
 }
 

@@ -8,10 +8,14 @@ body
   box-sizing: border-box
 
 .content
+  opacity: 0
   display: flex
   flex-wrap: wrap
   min-height: 100vh
   position: relative
+  transition: opacity 1s
+  &--visible
+    opacity: 1
 
 .credentials
 	width: 100%
