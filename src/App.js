@@ -131,7 +131,7 @@ function App() {
 
             <CSSTransition
                 in={!contentIsLoaded && answerReceived}
-                timeout={1000}
+                timeout={500}
                 classNames="animation"
                 mountOnEnter
                 unmountOnExit
