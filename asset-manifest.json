@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.a94bd91a.chunk.css",
+    "main.css": "/static/css/main.9095703e.chunk.css",
     "main.js": "/static/js/main.b1a8ab97.chunk.js",
     "main.js.map": "/static/js/main.b1a8ab97.chunk.js.map",
     "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
@@ -9,10 +9,10 @@
     "static/js/2.f875f001.chunk.js": "/static/js/2.f875f001.chunk.js",
     "static/js/2.f875f001.chunk.js.map": "/static/js/2.f875f001.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.22dd9b50cac19380bb5958f6b09357ff.js": "/precache-manifest.22dd9b50cac19380bb5958f6b09357ff.js",
+    "precache-manifest.826d1e846eb3b26913a70823cbd38276.js": "/precache-manifest.826d1e846eb3b26913a70823cbd38276.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.09700f6a.chunk.css.map": "/static/css/2.09700f6a.chunk.css.map",
-    "static/css/main.a94bd91a.chunk.css.map": "/static/css/main.a94bd91a.chunk.css.map",
+    "static/css/main.9095703e.chunk.css.map": "/static/css/main.9095703e.chunk.css.map",
     "static/media/SingleSlide.sass": "/static/media/youtube.73d79617.svg",
     "static/media/emojii-facepalm.png": "/static/media/emojii-facepalm.60420728.png",
     "static/media/empty-poster.png": "/static/media/empty-poster.b9aba793.png"
