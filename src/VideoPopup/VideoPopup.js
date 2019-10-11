@@ -10,6 +10,10 @@ function VideoPopup({ currTrailerUrl, setShowPopup }) {
         }
         setShowPopup(false);
     }
+
+    // Using YT API https://stackoverflow.com/questions/54017100/how-to-integrate-youtube-iframe-api-in-reactjs-solution
+    // https://developers.google.com/youtube/v3/getting-started
+    //  if (!window.YT) {
     
     return (
         <div className='video-popup' onClick={closePopup} >
