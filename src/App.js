@@ -39,9 +39,12 @@ function App() {
             effect: 'coverflow',
             centeredSlides: true,
             slidesPerView: 'auto',
-            mousewheel: true,
+            mousewheel: {
+                eventsTarged: '.item__img',
+            },
             keyboard: true,
             slideToClickedSlide: true,
+            autoHeight: true,
             scrollbar: {
                 el: '.swiper-scrollbar',
                 draggable: true,
@@ -113,7 +116,7 @@ function App() {
             <div className={`content ${contentIsLoaded && answerReceived ? 'content--visible' : ''}`}>
                 <div className="credentials">
                     <p>Made by Vladyslav Klymenko</p>
-                    <a href="https://www.linkedin.com/in/vladklymenko/">LinkedIn</a>
+                    <a href="https://www.linkedin.com/in/vladklymenko/">linkedIn</a>
                     &nbsp;
                     <a href="mailto:drkleem@gmail.com">drkleem@gmail.com</a>
                 </div>

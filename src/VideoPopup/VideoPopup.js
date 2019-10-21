@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import './VideoPopup.sass';
+import YoutubePlayer from '../YoutubePlayer/YoutubePlayer';
 
 function VideoPopup({ currTrailerUrl, setShowPopup }) {
     const videoPopupContentRef = useRef();
@@ -10,22 +11,19 @@ function VideoPopup({ currTrailerUrl, setShowPopup }) {
         }
         setShowPopup(false);
     }
-
-    // Using YT API https://stackoverflow.com/questions/54017100/how-to-integrate-youtube-iframe-api-in-reactjs-solution
-    // https://developers.google.com/youtube/v3/getting-started
-    //  if (!window.YT) {
     
     return (
         <div className='video-popup' onClick={closePopup} >
             <span className='video-popup__content' ref={videoPopupContentRef}>
                 <div className="video-popup__media">
-                    <iframe 
+                    <YoutubePlayer id={currTrailerUrl} />
+                    {/* <iframe 
                         className="video-popup__iframe" 
                         src={currTrailerUrl} 
                         frameBorder="0" 
                         allow="autoplay; encrypted-media"
                         allowFullScreen 
-                    />
+                    /> */}
                 </div>
             </span>
         </div>

@@ -4,16 +4,16 @@ import emptyPoster from '../../assets/img/empty-poster.png';
 
 function SingleSlide({ movie, setShowPopup, setCurrTrailerUrl }) {
 
-    const genreList = (
+    const genreList = movie.genres.length ? (
         <>
-            {movie.genres.map((item) =>
+            {movie.genres.map((item) => 
                 <div key={item.id} className="item__genre-element">
                     <div className={`item__genre-icon item__genre-icon--${item.id}`} />
                     <div className="item__genre-name" >{item.name}</div>
                 </div>
             )}
         </>
-    );
+    ) : null;
 
     const posterSrc = movie.poster !== null ? (
         movie.poster
@@ -23,7 +23,7 @@ function SingleSlide({ movie, setShowPopup, setCurrTrailerUrl }) {
     
     const openVideo = (e) => {
         e.preventDefault();
-        const currTrailerUrl = e.target.getAttribute('href');
+        const currTrailerUrl = e.target.getAttribute('data-trailer-id');
         setCurrTrailerUrl(currTrailerUrl);
         setShowPopup(true);
     }
@@ -57,18 +57,26 @@ function SingleSlide({ movie, setShowPopup, setCurrTrailerUrl }) {
                         <div className="item__sidebar item__sidebar--trailer">
                             <span className="item__sidebar-title item__sidebar-title--sm">Трейлер</span>
                             <span className="item__sidebar-icon item__sidebar-icon--youtube" />
-                            <a className="item__sidebar-link" href={movie.trailer_url} onClick={openVideo}>Youtube</a>
+                            <a 
+                                className="item__sidebar-link"
+                                data-trailer-id={movie.trailer_url} 
+                                href={`https://www.youtube.com/watch?v=${movie.trailer_url}`} 
+                                onClick={openVideo}>
+                                    Youtube
+                            </a>
                         </div>
                     }
 
-                    <div className="item__genre">
-                        <div className="item__sidebar item__genre-box item__genre-box--sm">
-                            {genreList}
+                    {genreList &&
+                        <div className="item__genre">
+                            <div className="item__sidebar item__genre-box item__genre-box--sm">
+                                {genreList}
+                            </div>
+                            <div className="item__sidebar item__genre-box item__genre-box--lg">
+                                {genreList}
+                            </div>
                         </div>
-                        <div className="item__sidebar item__genre-box item__genre-box--lg">
-                            {genreList}
-                        </div>
-                    </div>
+                    }
 
                 </div>
 
