@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import './VideoPopup.sass';
 import YoutubePlayer from '../YoutubePlayer/YoutubePlayer';
 
-function VideoPopup({ currTrailerUrl, setShowPopup }) {
+const VideoPopup = ({ currTrailerUrl, setShowPopup }) => {
     const videoPopupContentRef = useRef();
 
     const closePopup = (e) => {

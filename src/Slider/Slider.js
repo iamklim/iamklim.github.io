@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CSSTransition } from 'react-transition-group';
+import Swiper from 'swiper';
 
 import 'swiper/dist/css/swiper.css';
 import './Slider.sass';
@@ -7,9 +8,46 @@ import './Slider.sass';
 import SingleSlide from './SingleSlide/SingleSlide';
 import VideoPopup from '../VideoPopup/VideoPopup';
 
-function Slider({ movies, moviesAreSorted }) {
+const Slider = ({ movies, moviesAreSorted, onInit }) => {
     const [showPopup, setShowPopup] = useState(false);
     const [currTrailerId, setCurrTrailerId] = useState('');
+
+    const initSlider = () => {
+        new Swiper('.swiper-container', {
+            effect: 'coverflow',
+            centeredSlides: true,
+            slidesPerView: 'auto',
+            mousewheel: {
+                eventsTarged: '.item__img',
+            },
+            keyboard: true,
+            slideToClickedSlide: true,
+            //autoHeight: true,
+            scrollbar: {
+                el: '.swiper-scrollbar',
+                draggable: true,
+                //hide: true,
+              },
+            coverflowEffect: {
+                rotate: 20,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows : false, // Done using CSS
+            },
+            on: {
+                init: () => {
+                    onInit(true);
+                }
+            }
+        });
+    }
+
+    useEffect(() => {
+        if (moviesAreSorted) {
+             initSlider();
+        }
+    }, [moviesAreSorted])
 
     return (
         <>

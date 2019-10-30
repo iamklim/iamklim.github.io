@@ -1,11 +1,15 @@
 import ajaxRequest from './ajaxRequest';
+import { tmdbApiKey } from '../apiKeys';
 
-const getTMDbInfo = async (apiKey, movies, browserLanguage, updateMovies, setFinish) => {
-    console.log('getTMDbInfo 2-2');
+const getTMDbInfo = async (movies, browserLanguage, updateMovies, setFinish) => {
     const promises = await movies.map(async (currMovie) => {
-        let currTMDbId = currMovie.id;
 
-        let requestTMDb = `https://api.themoviedb.org/3/movie/${currTMDbId}?api_key=${apiKey}&language=${browserLanguage}&append_to_response=external_ids,videos`;
+        const requestBody = 'https://api.themoviedb.org/3/movie';
+        const requestId = currMovie.id;
+        const requestKey = `api_key=${tmdbApiKey}`;
+        const requestLanguage = `language=${browserLanguage}`;
+        const requestAppend = 'append_to_response=external_ids,videos';
+        const requestTMDb = `${requestBody}/${requestId}?${requestKey}&${requestLanguage}&${requestAppend}`;
 
         const movieInfo = await ajaxRequest(requestTMDb);
 

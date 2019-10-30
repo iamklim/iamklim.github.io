@@ -2,24 +2,22 @@ import React from 'react';
 import './SingleSlide.sass';
 import emptyPoster from '../../assets/img/empty-poster.png';
 
-function SingleSlide({ movie, setShowPopup, setCurrTrailerId }) {
+const SingleSlide = ({ movie, setShowPopup, setCurrTrailerId }) => {
 
-    const genreList = movie.genres ? (
+    const { genres, poster, title, year, imdbRating, metascore, trailerId, director, actors, overview } = movie;
+    const genreList = genres ? (
         <>
-            {movie.genres.map((item) => 
-                <div key={item.id} className="item__genre-element">
-                    <div className={`item__genre-icon item__genre-icon--${item.id}`} />
-                    <div className="item__genre-name" >{item.name}</div>
+            {genres.map(({ id, name }) => 
+                <div key={id} className="item__genre-element">
+                    <div className={`item__genre-icon item__genre-icon--${id}`} />
+                    <div className="item__genre-name" >{name}</div>
                 </div>
             )}
         </>
     ) : null;
 
-    const posterSrc = movie.poster ? (
-        movie.poster
-    ) : (
-            emptyPoster
-        );
+    const posterSrc = poster || emptyPoster;
+    const movieYear = year ? `(${year})` : '';
     
     const openVideo = (e) => {
         e.preventDefault();
@@ -31,7 +29,7 @@ function SingleSlide({ movie, setShowPopup, setCurrTrailerId }) {
     return (
         <div className="swiper-slide item">
             <div className="item__description item__title">
-                <span>{`${movie.title} ${movie.year ? '(' + movie.year + ')' : ''}`}</span>
+                <span>{`${title} ${movieYear}`}</span>
             </div>
 
             <div className="item__img">
@@ -43,24 +41,24 @@ function SingleSlide({ movie, setShowPopup, setCurrTrailerId }) {
                 <div className="item__description item__marks">
                     <div className=" item__sidebar item__sidebar--imdb">
                         <span className="item__sidebar-title">IMDb</span>
-                        <span className="item__sidebar-number">{movie.imdbRating}</span>
+                        <span className="item__sidebar-number">{imdbRating}</span>
                     </div>
 
-                    {movie.metascore &&
+                    {metascore &&
                         <div className="item__sidebar item__sidebar--metascore">
                             <span className="item__sidebar-title item__sidebar-title--sm">Критики</span>
-                            <span className="item__sidebar-number">{`${movie.metascore}%`}</span>
+                            <span className="item__sidebar-number">{`${metascore}%`}</span>
                         </div>
                     }
 
-                    {movie.trailerId &&
+                    {trailerId &&
                         <div className="item__sidebar item__sidebar--trailer">
                             <span className="item__sidebar-title item__sidebar-title--sm">Трейлер</span>
                             <span className="item__sidebar-icon item__sidebar-icon--youtube" />
                             <a 
                                 className="item__sidebar-link"
-                                data-trailer-id={movie.trailerId} 
-                                href={`https://www.youtube.com/watch?v=${movie.trailerId}`} 
+                                data-trailer-id={trailerId} 
+                                href={`https://www.youtube.com/watch?v=${trailerId}`} 
                                 onClick={openVideo}>
                                     Youtube
                             </a>
@@ -86,20 +84,20 @@ function SingleSlide({ movie, setShowPopup, setCurrTrailerId }) {
             <div className="item__description item__bottom">
 
                 <div className="item__cast">
-                    {movie.director && 
+                    {director && 
                         <span className="item__director">
-                            Режиссер: <span>{movie.director}</span>
+                            Режиссер: <span>{director}</span>
                         </span>
                     }
-                    {movie.actors &&
+                    {actors &&
                         <span className="item__actors">
-                            В ролях: <span>{movie.actors}</span>
+                            В ролях: <span>{actors}</span>
                         </span>
                     }
                 </div>
 
                 <div className="item__overview">
-                    <span>{movie.overview}</span>
+                    <span>{overview}</span>
                 </div>
             </div>
         </div>

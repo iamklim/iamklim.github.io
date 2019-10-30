@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './YoutubePlayer.sass';
 
-function YoutubePlayer({ id }) {
+const YoutubePlayer = ({ id }) => {
 
     useEffect(() => {
         // On mount, check to see if the API script is already loaded
@@ -30,7 +30,7 @@ function YoutubePlayer({ id }) {
             modestbranding: 1,
             rel: 0,
             showinfo: 0,
-            playsinline: 0,
+            playsinline: 1,
             events: {
                 onReady: onPlayerReady,
             },
@@ -42,9 +42,7 @@ function YoutubePlayer({ id }) {
         event.target.playVideo();
     };
 
-    return (
-        <div id={`youtube-player-${id}`} />
-    );
+    return <div id={`youtube-player-${id}`} />;
 }
 
 export default YoutubePlayer;

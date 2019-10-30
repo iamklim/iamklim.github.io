@@ -2,7 +2,7 @@ import React from 'react';
 import './ErrorFallback.sass';
 import ErrorIcon from '../assets/img/emojii-facepalm.png'
 
-function ErrorFallback() {
+const ErrorFallback = () => {
     return (
         <div className="error-fallback">
             <div className="error-fallback__content">

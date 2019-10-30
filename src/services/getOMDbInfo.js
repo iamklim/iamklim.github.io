@@ -1,10 +1,13 @@
 import ajaxRequest from './ajaxRequest';
+import { omdbApiKey } from '../apiKeys';
 
-const getOMDbInfo = async (apiKey, movies, updateMovies, setFinish) => {
-    console.log('getOMDbInfo 3');
+const getOMDbInfo = async (movies, updateMovies, setFinish) => {
     const promises = await movies.map(async (currMovie) => {
-        let currIMDbId = currMovie.imdb_id;
-        let requestOMDb = `https://www.omdbapi.com/?i=${currIMDbId}&apikey=${apiKey}`;
+
+        const requestBody = 'https://www.omdbapi.com';
+        const requestId = `i=${currMovie.imdb_id}`;
+        const requestKey = `apikey=${omdbApiKey}`;
+        const requestOMDb = `${requestBody}/?${requestId}&${requestKey}`;
 
         const movieInfo = await ajaxRequest(requestOMDb);
 
