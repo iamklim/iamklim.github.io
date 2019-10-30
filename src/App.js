@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import Swiper from 'swiper';
 
@@ -9,6 +9,8 @@ import getOMDbInfo from './services/getOMDbInfo';
 import Slider from './Slider/Slider';
 import Preloader from "./Preloader/Preloader";
 import ErrorFallback from './ErrorFallback/ErrorFallback';
+import CountrySelect from './CountrySelect/CountrySelect';
+import LanguageSelect from './LanguageSelect/LanguageSelect';
 
 import './App.sass';
 
@@ -21,6 +23,11 @@ function App() {
     const [ sliderInited, setSliderInited ] = useState(false);
     const [ answerReceived, setAnswerReceived ] = useState(false);
     const [ contentIsLoaded, setContentIsLoaded ] = useState(false);
+    const [ region, setRegion ] = useState('UA');
+    const [ userLanguage, setUserLanguage ] = useState('ru');
+    const [ browserLanguage, setBrowserLanguage ] = useState('ru');
+
+    const didMount = useRef(false);
   
     const TMDbAPI = "3b07521ea25bf66106a9525b3054c8e9";
     const OMDbAPI = "55018c43";
@@ -44,11 +51,11 @@ function App() {
             },
             keyboard: true,
             slideToClickedSlide: true,
-            autoHeight: true,
+            //autoHeight: true,
             scrollbar: {
                 el: '.swiper-scrollbar',
                 draggable: true,
-                hide: true,
+                //hide: true,
               },
             coverflowEffect: {
                 rotate: 20,
@@ -66,12 +73,32 @@ function App() {
     }
 
     useEffect(() => {
-        getNowPlaying(TMDbAPI, setMovies, setNowPlayingReceived, setAnswerReceived);
+        getNowPlaying(TMDbAPI, region, userLanguage, setMovies, setNowPlayingReceived, setAnswerReceived);
     }, []);
+
+    useEffect(() => {
+        if (didMount.current) {
+            setAnswerReceived(false);
+            setContentIsLoaded(false);
+            setMovies([]);
+            setNowPlayingReceived(false);
+            setTMDbInfoReceived(false);
+            setOMDbInfoReceived(false);
+            setMoviesAreSorted(false);
+            setSliderInited(false);
+            
+            getNowPlaying(TMDbAPI, region, userLanguage, setMovies, setNowPlayingReceived, setAnswerReceived);
+        }
+        else {
+            didMount.current = true;
+        }
+        
+    }, [region, userLanguage]);
 
     useEffect(()=>{
         if (nowPlayingReceived && movies.length) {
-            getTMDbInfo(TMDbAPI, movies, setMovies, setTMDbInfoReceived);
+            console.log('getTMDbInfo 2-1');
+            getTMDbInfo(TMDbAPI, movies, userLanguage, setMovies, setTMDbInfoReceived);
         }
     }, [nowPlayingReceived]);
 
@@ -100,20 +127,27 @@ function App() {
         }
     }, [sliderInited]);
 
-    // eslint-disable-next-line
+    //eslint-disable-next-line
     // useEffect(()=>{
-    //     console.log('-----------------------------------------------------------------');
+    //     console.log('-------------------------------------');
     //     console.log('nowPlayingReceived',nowPlayingReceived);
     //     console.log('TMDbInfoReceived',TMDbInfoReceived);
+    //     console.log('OMDbInfoReceived',OMDbInfoReceived);
     //     console.log('moviesAreSorted',moviesAreSorted);
     //     console.log('contentIsLoaded',contentIsLoaded);
     //     console.log('answerReceived',answerReceived);
+    //     console.log('sliderInited',sliderInited);
+    //     console.log('didMount.current',didMount.current);
     //     console.log(movies);
     // })
 
     return (
         <>
             <div className={`content ${contentIsLoaded && answerReceived ? 'content--visible' : ''}`}>
+
+                <CountrySelect onSelect={setRegion} />
+                <LanguageSelect onSelect={setUserLanguage} />
+
                 <div className="credentials">
                     <p>Made by Vladyslav Klymenko</p>
                     <a href="https://www.linkedin.com/in/vladklymenko/">linkedIn</a>
@@ -129,7 +163,7 @@ function App() {
                 classNames="animation"
                 unmountOnExit
             >
-                <Preloader/>
+                <Preloader />
             </CSSTransition>
 
             <CSSTransition

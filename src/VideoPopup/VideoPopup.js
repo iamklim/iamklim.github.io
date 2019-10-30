@@ -17,13 +17,6 @@ function VideoPopup({ currTrailerUrl, setShowPopup }) {
             <span className='video-popup__content' ref={videoPopupContentRef}>
                 <div className="video-popup__media">
                     <YoutubePlayer id={currTrailerUrl} />
-                    {/* <iframe 
-                        className="video-popup__iframe" 
-                        src={currTrailerUrl} 
-                        frameBorder="0" 
-                        allow="autoplay; encrypted-media"
-                        allowFullScreen 
-                    /> */}
                 </div>
             </span>
         </div>

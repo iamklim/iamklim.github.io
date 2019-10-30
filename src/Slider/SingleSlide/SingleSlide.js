@@ -2,9 +2,9 @@ import React from 'react';
 import './SingleSlide.sass';
 import emptyPoster from '../../assets/img/empty-poster.png';
 
-function SingleSlide({ movie, setShowPopup, setCurrTrailerUrl }) {
+function SingleSlide({ movie, setShowPopup, setCurrTrailerId }) {
 
-    const genreList = movie.genres.length ? (
+    const genreList = movie.genres ? (
         <>
             {movie.genres.map((item) => 
                 <div key={item.id} className="item__genre-element">
@@ -15,7 +15,7 @@ function SingleSlide({ movie, setShowPopup, setCurrTrailerUrl }) {
         </>
     ) : null;
 
-    const posterSrc = movie.poster !== null ? (
+    const posterSrc = movie.poster ? (
         movie.poster
     ) : (
             emptyPoster
@@ -23,15 +23,15 @@ function SingleSlide({ movie, setShowPopup, setCurrTrailerUrl }) {
     
     const openVideo = (e) => {
         e.preventDefault();
-        const currTrailerUrl = e.target.getAttribute('data-trailer-id');
-        setCurrTrailerUrl(currTrailerUrl);
+        const currTrailerId = e.target.getAttribute('data-trailer-id');
+        setCurrTrailerId(currTrailerId);
         setShowPopup(true);
     }
 
     return (
         <div className="swiper-slide item">
             <div className="item__description item__title">
-                <span>{`${movie.title} (${movie.year})`}</span>
+                <span>{`${movie.title} ${movie.year ? '(' + movie.year + ')' : ''}`}</span>
             </div>
 
             <div className="item__img">
@@ -46,21 +46,21 @@ function SingleSlide({ movie, setShowPopup, setCurrTrailerUrl }) {
                         <span className="item__sidebar-number">{movie.imdbRating}</span>
                     </div>
 
-                    {!isNaN(movie.metascore) &&
+                    {movie.metascore &&
                         <div className="item__sidebar item__sidebar--metascore">
                             <span className="item__sidebar-title item__sidebar-title--sm">Критики</span>
-                            <span className="item__sidebar-number">{movie.metascore + '%'}</span>
+                            <span className="item__sidebar-number">{`${movie.metascore}%`}</span>
                         </div>
                     }
 
-                    {movie.trailer_url.length > 0 &&
+                    {movie.trailerId &&
                         <div className="item__sidebar item__sidebar--trailer">
                             <span className="item__sidebar-title item__sidebar-title--sm">Трейлер</span>
                             <span className="item__sidebar-icon item__sidebar-icon--youtube" />
                             <a 
                                 className="item__sidebar-link"
-                                data-trailer-id={movie.trailer_url} 
-                                href={`https://www.youtube.com/watch?v=${movie.trailer_url}`} 
+                                data-trailer-id={movie.trailerId} 
+                                href={`https://www.youtube.com/watch?v=${movie.trailerId}`} 
                                 onClick={openVideo}>
                                     Youtube
                             </a>
@@ -86,12 +86,16 @@ function SingleSlide({ movie, setShowPopup, setCurrTrailerUrl }) {
             <div className="item__description item__bottom">
 
                 <div className="item__cast">
-                    <span className="item__director">
-                        Режиссер: <span>{movie.director}</span>
-                    </span>
-                    <span className="item__actors">
-                        В ролях: <span>{movie.actors}</span>
-                    </span>
+                    {movie.director && 
+                        <span className="item__director">
+                            Режиссер: <span>{movie.director}</span>
+                        </span>
+                    }
+                    {movie.actors &&
+                        <span className="item__actors">
+                            В ролях: <span>{movie.actors}</span>
+                        </span>
+                    }
                 </div>
 
                 <div className="item__overview">

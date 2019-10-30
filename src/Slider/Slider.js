@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 import 'swiper/dist/css/swiper.css';
@@ -9,7 +9,7 @@ import VideoPopup from '../VideoPopup/VideoPopup';
 
 function Slider({ movies, moviesAreSorted }) {
     const [showPopup, setShowPopup] = useState(false);
-    const [currTrailerUrl, setCurrTrailerUrl] = useState('');
+    const [currTrailerId, setCurrTrailerId] = useState('');
 
     return (
         <>
@@ -22,7 +22,7 @@ function Slider({ movies, moviesAreSorted }) {
                                 key={item.id} 
                                 movie={item} 
                                 setShowPopup={setShowPopup} 
-                                setCurrTrailerUrl={setCurrTrailerUrl} 
+                                setCurrTrailerId={setCurrTrailerId} 
                             />
                         ))
                     }
@@ -30,14 +30,14 @@ function Slider({ movies, moviesAreSorted }) {
             </div>
             
             <CSSTransition
-                in={showPopup && currTrailerUrl.length > 0}
+                in={showPopup && currTrailerId.length > 0}
                 timeout={500}
                 classNames="animation"
                 mountOnEnter
                 unmountOnExit
             >
                 <VideoPopup 
-                    currTrailerUrl={currTrailerUrl} 
+                    currTrailerUrl={currTrailerId} 
                     setShowPopup={setShowPopup} 
                 />
             </CSSTransition>

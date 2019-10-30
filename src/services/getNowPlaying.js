@@ -1,7 +1,8 @@
 import ajaxRequest from './ajaxRequest';
 
-const getNowPlaying = (apiKey, updateMovies, setNowPlayingReceived, setAnswerReceived) => {
-    const requestTMDb = `https://api.themoviedb.org/3/movie/now_playing?region=UA&language=ru-RU&api_key=${apiKey}`;
+const getNowPlaying = (apiKey, region, userLanguage, updateMovies, setNowPlayingReceived, setAnswerReceived) => {
+    console.log('nowPlayingResults 1');
+    const requestTMDb = `https://api.themoviedb.org/3/movie/now_playing?region=${region}&language=${userLanguage}&api_key=${apiKey}`;
     const posterPath = `https://image.tmdb.org/t/p/original`; // lower resolution: https://image.tmdb.org/t/p/w370_and_h556_bestv2
     
     Promise.all([ajaxRequest(requestTMDb), ajaxRequest(`${requestTMDb}&page=2`)])
@@ -16,10 +17,7 @@ const getNowPlaying = (apiKey, updateMovies, setNowPlayingReceived, setAnswerRec
             }
 
             nowPlayingResults.forEach((item) => {
-                if (item.poster_path === null) {
-                    item.poster = null;
-                }
-                else {
+                if (item.poster_path) {
                     item.poster = posterPath + item.poster_path;
                 }
             });
@@ -27,10 +25,14 @@ const getNowPlaying = (apiKey, updateMovies, setNowPlayingReceived, setAnswerRec
             return nowPlayingResults;
         })
         .then((nowPlayingResults) => {
-            updateMovies(nowPlayingResults);
-        })
-        .then(() => {
-            setNowPlayingReceived(true);
+            if (nowPlayingResults.length) {
+                updateMovies(nowPlayingResults);
+                setNowPlayingReceived(true);
+            }
+            else {
+                setNowPlayingReceived(false);
+                setAnswerReceived(true);
+            }
         })
         .catch(() => {
             setNowPlayingReceived(false);

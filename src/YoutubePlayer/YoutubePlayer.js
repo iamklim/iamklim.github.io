@@ -22,7 +22,7 @@ function YoutubePlayer({ id }) {
 
     const loadVideo = () => {
         // the Player object is created uniquely based on the id in props
-        const player = new window.YT.Player(`youtube-player-${id}`, {
+        let player = new window.YT.Player(`youtube-player-${id}`, {
             videoId: id,
             height: "100%",
             width: "100%",

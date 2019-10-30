@@ -1,23 +1,19 @@
 import ajaxRequest from './ajaxRequest';
 
 const getOMDbInfo = async (apiKey, movies, updateMovies, setFinish) => {
-
+    console.log('getOMDbInfo 3');
     const promises = await movies.map(async (currMovie) => {
         let currIMDbId = currMovie.imdb_id;
         let requestOMDb = `https://www.omdbapi.com/?i=${currIMDbId}&apikey=${apiKey}`;
 
         const movieInfo = await ajaxRequest(requestOMDb);
 
-        if (isNaN(movieInfo.imdbRating)) { // may be "N/A"
-            movieInfo.imdbRating = '-';
-        }
-
-        currMovie.imdbRating = movieInfo.imdbRating;
-        currMovie.director = movieInfo.Director;
-        currMovie.actors = movieInfo.Actors;
-        currMovie.metascore = movieInfo.Metascore; // may be "N/A"
-        currMovie.year = movieInfo.Year;
-
+        currMovie.imdbRating = !isNaN(movieInfo.imdbRating) ? movieInfo.imdbRating : '-';
+        currMovie.metascore = !isNaN(movieInfo.Metascore) ? movieInfo.Metascore : null;
+        currMovie.year = !isNaN(movieInfo.Year) ? movieInfo.Year : null;
+        currMovie.director = movieInfo.Director !== 'N/A' ? movieInfo.Director : null;
+        currMovie.actors = movieInfo.Actors !== 'N/A' ? movieInfo.Actors : null;
+        
         return currMovie;
     })
 
