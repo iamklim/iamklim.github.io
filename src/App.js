@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
-import Swiper from 'swiper';
 
 import getNowPlaying from './services/getNowPlaying';
 import getTMDbInfo from './services/getTMDbInfo';
@@ -81,31 +80,35 @@ const App = () => {
     //eslint-disable-next-line
     // useEffect(()=>{
     //     console.log('-------------------------------------');
-    //     console.log('nowPlayingReceived',nowPlayingReceived);
-    //     console.log('TMDbInfoReceived',TMDbInfoReceived);
-    //     console.log('OMDbInfoReceived',OMDbInfoReceived);
-    //     console.log('moviesAreSorted',moviesAreSorted);
-    //     console.log('contentIsLoaded',contentIsLoaded);
-    //     console.log('answerReceived',answerReceived);
-    //     console.log('sliderInited',sliderInited);
-    //     console.log('didMount.current',didMount.current);
-    //     console.log(movies);
+    //     console.log('nowPlayingReceived: ',nowPlayingReceived);
+    //     console.log('TMDbInfoReceived: ',TMDbInfoReceived);
+    //     console.log('OMDbInfoReceived: ',OMDbInfoReceived);
+    //     console.log('moviesAreSorted: ',moviesAreSorted);
+    //     console.log('contentIsLoaded: ',contentIsLoaded);
+    //     console.log('answerReceived: ',answerReceived);
+    //     console.log('sliderInited: ',sliderInited);
+    //     console.log('didMount.current: ', didMount.current);
     // })
 
     return (
         <>
             <div className={`content ${contentIsLoaded && answerReceived ? 'content--visible' : ''}`}>
 
-                <CountrySelect onSelect={setRegion} />
-                <LanguageSelect onSelect={setLanguage} />
+                {/* <CountrySelect onSelect={setRegion} />
+                <LanguageSelect onSelect={setLanguage} /> */}
 
-                <div className="credentials">
+                <div className="content__credentials">
                     <p>Made by Vladyslav Klymenko</p>
                     <a href="https://www.linkedin.com/in/vladklymenko/">linkedIn</a>
                     &nbsp;
                     <a href="mailto:drkleem@gmail.com">drkleem@gmail.com</a>
                 </div>
-                <Slider movies={movies} moviesAreSorted={moviesAreSorted} onInit={setSliderInited} />
+
+                <Slider 
+                    movies={movies} 
+                    moviesAreSorted={moviesAreSorted} 
+                    onInit={setSliderInited} 
+                />
             </div>
 
             <CSSTransition
