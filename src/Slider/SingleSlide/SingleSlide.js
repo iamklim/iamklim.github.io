@@ -2,57 +2,70 @@ import React from 'react';
 import './SingleSlide.sass';
 import emptyPoster from '../../assets/img/empty-poster.png';
 
-class SingleSlide extends React.Component {
+const SingleSlide = ({ movie, setShowPopup, setCurrTrailerId }) => {
 
-    render() {
-        const genreList = (
-            <>
-                {this.props.movie.genres.map((item) =>
-                    <div key={item.id} className="item__genre-element">
-                        <div className={`item__genre-icon item__genre-icon--${item.id}`} />
-                        <div className="item__genre-name" >{item.name}</div>
-                    </div>
-                )}
-            </>
-        );
-        const posterSrc = this.props.movie.poster !== null ? (
-                this.props.movie.poster
-            ) : (
-                emptyPoster
-            );
-        return (
-            <div className="swiper-slide item">
-                <div className="item__description item__title">
-                    <span>{`${this.props.movie.title} (${this.props.movie.year})`}</span>
+    const { genres, poster, title, year, imdbRating, metascore, trailerId, director, actors, overview } = movie;
+    const genreList = genres ? (
+        <>
+            {genres.map(({ id, name }) => 
+                <div key={id} className="item__genre-element">
+                    <div className={`item__genre-icon item__genre-icon--${id}`} />
+                    <div className="item__genre-name" >{name}</div>
                 </div>
+            )}
+        </>
+    ) : null;
 
-                <div className="item__img">
-                    <img src={posterSrc} alt="Poster" />
+    const posterSrc = poster || emptyPoster;
+    const movieYear = year ? `(${year})` : '';
+    
+    const openVideo = (e) => {
+        e.preventDefault();
+        const currTrailerId = e.target.getAttribute('data-trailer-id');
+        setCurrTrailerId(currTrailerId);
+        setShowPopup(true);
+    }
 
-                    <div className="item__shadow item__shadow--left" />
-                    <div className="item__shadow item__shadow--right" />
+    return (
+        <div className="swiper-slide item">
+            <div className="item__description item__title">
+                <span>{`${title} ${movieYear}`}</span>
+            </div>
 
-                    <div className="item__description item__marks">
-                        <div className=" item__sidebar item__sidebar--imdb">
-                            <span className="item__sidebar-title">IMDb</span>
-                            <span className="item__sidebar-number">{this.props.movie.imdbRating}</span>
+            <div className="item__img">
+                <img src={posterSrc} alt="Poster" />
+
+                <div className="item__shadow item__shadow--left" />
+                <div className="item__shadow item__shadow--right" />
+
+                <div className="item__description item__marks">
+                    <div className=" item__sidebar item__sidebar--imdb">
+                        <span className="item__sidebar-title">IMDb</span>
+                        <span className="item__sidebar-number">{imdbRating}</span>
+                    </div>
+
+                    {metascore &&
+                        <div className="item__sidebar item__sidebar--metascore">
+                            <span className="item__sidebar-title item__sidebar-title--sm">Критики</span>
+                            <span className="item__sidebar-number">{`${metascore}%`}</span>
                         </div>
+                    }
 
-                        {!isNaN(this.props.movie.metascore) &&
-                            <div className="item__sidebar item__sidebar--metascore">
-                                <span className="item__sidebar-title item__sidebar-title--sm">Критики</span>
-                                <span className="item__sidebar-number">{this.props.movie.metascore + '%'}</span>
-                            </div>
-                        }
+                    {trailerId &&
+                        <div className="item__sidebar item__sidebar--trailer">
+                            <span className="item__sidebar-title item__sidebar-title--sm">Трейлер</span>
+                            <span className="item__sidebar-icon item__sidebar-icon--youtube" />
+                            <a 
+                                className="item__sidebar-link"
+                                data-trailer-id={trailerId} 
+                                href={`https://www.youtube.com/watch?v=${trailerId}`} 
+                                onClick={openVideo}>
+                                    Youtube
+                            </a>
+                        </div>
+                    }
 
-                        {this.props.movie.trailer_url.length > 0 &&
-                            <div className="item__sidebar item__sidebar--trailer">
-                                <span className="item__sidebar-title item__sidebar-title--sm">Трейлер</span>
-                                <span className="item__sidebar-icon item__sidebar-icon--youtube"/>
-                                <a className="item__sidebar-link" href={this.props.movie.trailer_url}>Youtube</a>
-                            </div>
-                        }
-
+                    {genreList &&
                         <div className="item__genre">
                             <div className="item__sidebar item__genre-box item__genre-box--sm">
                                 {genreList}
@@ -61,32 +74,35 @@ class SingleSlide extends React.Component {
                                 {genreList}
                             </div>
                         </div>
-
-                    </div>
-
-
+                    }
 
                 </div>
 
+            </div>
 
-                <div className="item__description item__bottom">
 
-                    <div className="item__cast">
+            <div className="item__description item__bottom">
+
+                <div className="item__cast">
+                    {director && 
                         <span className="item__director">
-                            Режиссер: <span>{this.props.movie.director}</span>
+                            Режиссер: <span>{director}</span>
                         </span>
+                    }
+                    {actors &&
                         <span className="item__actors">
-                            В ролях: <span>{this.props.movie.actors}</span>
+                            В ролях: <span>{actors}</span>
                         </span>
-                    </div>
+                    }
+                </div>
 
-                    <div className="item__overview">
-                        <span>{this.props.movie.overview}</span>
-                    </div>
+                <div className="item__overview">
+                    <span>{overview}</span>
                 </div>
             </div>
-        );
-    }
+        </div>
+    );
+
 }
 
 export default SingleSlide;

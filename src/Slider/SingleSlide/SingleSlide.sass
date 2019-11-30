@@ -1,3 +1,5 @@
+@import ../../vars.sass
+
 .swiper-slide
 	width: 20%
 	@media (max-width: 1024px)
@@ -17,11 +19,7 @@
 			height: auto
 
 	&__shadow
-		position: absolute
-		top: 0
-		right: 0
-		bottom: 0
-		left: 0
+		@extend %full-screen
 		transition: opacity .35s ease
 		&--left
 			opacity: 1
@@ -41,6 +39,7 @@
 		justify-content: center
 		min-height: 80px
 		font-size: 22px
+		padding: 10px 0
 		margin: 0 -100%
 		@media (max-width: 768px)
 			margin: 0 -50%
@@ -83,11 +82,7 @@
 			font-size: 25px
 
 		&-link
-			position: absolute
-			top: 0
-			left: 0
-			right: 0
-			bottom: 0
+			@extend %full-screen
 			font-size: 0
 			z-index: 1
 
@@ -167,7 +162,7 @@
 				background-image: url('../../assets/img/genres/10770.png')
 
 		&-name
-			color: #000000
+			color: #000
 
 		&-box--sm
 			.item__genre
@@ -186,6 +181,7 @@
 				&-element
 					margin: 6px 5px
 				&-icon
+					flex: 0 0 30px
 					width: 30px
 					height: 30px
 				&-name
