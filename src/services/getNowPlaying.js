@@ -1,50 +1,52 @@
-import ajaxRequest from './ajaxRequest';
-import { tmdbApiKey } from '../apiKeys';
+import apiRequest from "./apiRequest";
+import {
+  TMDB_API_URL,
+  TMDB_API_KEY,
+  TMDB_REGION,
+  TMDB_LANGUAGE,
+  TMDB_IMAGES_URL,
+} from "../config";
 
-const getNowPlaying = (region, userLanguage, updateMovies, setNowPlayingReceived, setAnswerReceived) => {
-
-    const apiRequestsLimit = 39; // to avoid TMDb API 40 requests limit
-
-    const requestBody = 'https://api.themoviedb.org/3/movie/now_playing';
-    const requestRegion = `region=${region}`;
-    const requestLanguage = `language=${userLanguage}`;
-    const requestKey = `api_key=${tmdbApiKey}`;
+const getNowPlaying = async (
+  setMovies,
+  setNowPlayingReceived,
+  setAnswerReceived
+) => {
+  try {
+    const requestBody = `${TMDB_API_URL}/3/movie/now_playing`;
+    const requestRegion = `region=${TMDB_REGION}`;
+    const requestLanguage = `language=${TMDB_LANGUAGE}`;
+    const requestKey = `api_key=${TMDB_API_KEY}`;
     const requestTMDb = `${requestBody}?${requestRegion}&${requestLanguage}&${requestKey}`;
 
-    const posterPath = 'https://image.tmdb.org/t/p/original'; // lower resolution: https://image.tmdb.org/t/p/w370_and_h556_bestv2
-    
-    Promise.all([ajaxRequest(requestTMDb), ajaxRequest(`${requestTMDb}&page=2`)])
-        .then(([nowPlayingPage1, nowPlayingPage2]) => {
-            let nowPlayingPage1Results = nowPlayingPage1.results;
-            let nowPlayingPage2Results = nowPlayingPage2.results;
-            let nowPlayingResults = nowPlayingPage1Results.concat(nowPlayingPage2Results);
-            
-            if (nowPlayingResults.length > apiRequestsLimit) {
-                nowPlayingResults.length = apiRequestsLimit;
-            }
+    const posterPath = `${TMDB_IMAGES_URL}/t/p/original`;
 
-            nowPlayingResults.forEach((item) => {
-                if (item.poster_path) {
-                    item.poster = posterPath + item.poster_path;
-                }
-            });
+    const [nowPlayingPage1, nowPlayingPage2] = await Promise.all([
+      apiRequest(requestTMDb),
+      apiRequest(`${requestTMDb}&page=2`),
+    ]);
+    const nowPlayingResults = [
+      ...nowPlayingPage1.results,
+      ...nowPlayingPage2.results,
+    ];
 
-            return nowPlayingResults;
-        })
-        .then((nowPlayingResults) => {
-            if (nowPlayingResults.length) {
-                updateMovies(nowPlayingResults);
-                setNowPlayingReceived(true);
-            }
-            else {
-                setNowPlayingReceived(false);
-                setAnswerReceived(true);
-            }
-        })
-        .catch(() => {
-            setNowPlayingReceived(false);
-            setAnswerReceived(true);
-        });
-}
+    nowPlayingResults.forEach((movie) => {
+      if (movie.poster_path) {
+        movie.poster = `${posterPath}${movie.poster_path}`;
+      }
+    });
+
+    if (nowPlayingResults) {
+      setMovies(nowPlayingResults);
+      setNowPlayingReceived(true);
+    } else {
+      setNowPlayingReceived(false);
+      //setAnswerReceived(true);
+    }
+  } catch (err) {
+    setNowPlayingReceived(false);
+    //setAnswerReceived(true);
+  }
+};
 
 export default getNowPlaying;

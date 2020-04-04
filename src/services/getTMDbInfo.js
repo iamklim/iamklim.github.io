@@ -1,43 +1,45 @@
-import ajaxRequest from './ajaxRequest';
-import { tmdbApiKey } from '../apiKeys';
+import apiRequest from "./apiRequest";
+import { TMDB_API_URL, TMDB_API_KEY, TMDB_LANGUAGE } from "../config";
 
-const getTMDbInfo = async (movies, browserLanguage, updateMovies, setFinish) => {
-    const promises = await movies.map(async (currMovie) => {
+const getTMDbInfo = async (movies, setMovies, setTMDbInfoReceived) => {
+  try {
+    const moviesUpdated = [...movies];
 
-        const requestBody = 'https://api.themoviedb.org/3/movie';
-        const requestId = currMovie.id;
-        const requestKey = `api_key=${tmdbApiKey}`;
-        const requestLanguage = `language=${browserLanguage}`;
-        const requestAppend = 'append_to_response=external_ids,videos';
-        const requestTMDb = `${requestBody}/${requestId}?${requestKey}&${requestLanguage}&${requestAppend}`;
+    const requestBody = `${TMDB_API_URL}/3/movie`;
+    const requestKey = `api_key=${TMDB_API_KEY}`;
+    const requestLanguage = `language=${TMDB_LANGUAGE}`;
+    const requestAppend = "append_to_response=external_ids,videos";
 
-        const movieInfo = await ajaxRequest(requestTMDb);
+    const moviesUpdatedWithInfo = await Promise.all(
+      moviesUpdated.map(async (movie) => {
+        const requestTMDb = `${requestBody}/${movie.id}?${requestKey}&${requestLanguage}&${requestAppend}`;
+        const tmdbInfo = await apiRequest(requestTMDb);
 
-        let trailers = movieInfo.videos.results;
+        const trailers = tmdbInfo.videos.results;
 
         if (trailers.length > 0) {
-            let lastTrailer = trailers[trailers.length - 1];
-            if (lastTrailer.site === "YouTube") {
-                //trailerUrl = `https://www.youtube.com/embed/${lastTrailer.key}?autoplay=1&modestbranding=1&rel=0&showinfo=0`;
-                currMovie.trailerId = lastTrailer.key;
-            }
+          const lastTrailer = trailers[trailers.length - 1];
+          if (lastTrailer.site === "YouTube") {
+            //trailerUrl = `https://www.youtube.com/embed/${lastTrailer.key}?autoplay=1&modestbranding=1&rel=0&showinfo=0`;
+            movie.trailerId = lastTrailer.key;
+          }
         }
 
-        currMovie.imdb_id = movieInfo.imdb_id;
-        currMovie.genres = movieInfo.genres.length ? movieInfo.genres : null;
+        movie.imdb_id = tmdbInfo.imdb_id;
+        movie.genres = tmdbInfo.genres.length ? tmdbInfo.genres : null;
 
-        return currMovie;
-        
-    })
+        return movie;
+      })
+    );
 
-    await Promise.all(promises)
-    .then((updatedMovies) => {
-        updateMovies(updatedMovies)
-    })
-    .then(() => {
-        setFinish(true)
-    });
-
-}
+    if (moviesUpdatedWithInfo) {
+      setMovies(moviesUpdatedWithInfo);
+      setTMDbInfoReceived(true);
+    }
+  } catch (err) {
+    console.log(err);
+    setTMDbInfoReceived(false);
+  }
+};
 
 export default getTMDbInfo;

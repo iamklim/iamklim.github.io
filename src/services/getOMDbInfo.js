@@ -1,84 +1,41 @@
-import ajaxRequest from './ajaxRequest';
-import { omdbApiKey } from '../apiKeys';
+import apiRequest from "./apiRequest";
+import { OMDB_API_URL, OMDB_API_KEY } from "../config";
 
-const getOMDbInfo = (movies, updateMovies, setFinish) => {
+const getOMDbInfo = async (movies, setMovies, setOMDbInfoReceived) => {
+  try {
+    const moviesUpdated = [...movies];
+    const requestKey = `apikey=${OMDB_API_KEY}`;
 
-    // Promise.allSettled polyfill
-    if (!Promise.allSettled) {
-        Promise.allSettled = function (promises) {
-            return Promise.all(promises.map(p => Promise.resolve(p).then(value => ({
-                state: 'fulfilled',
-                value: value
-            }), error => ({
-                state: 'rejected',
-                reason: error
-            }))));
-        };
+    const moviesUpdatedWithInfo = await Promise.all(
+      moviesUpdated.map(async (movie) => {
+        movie.imdbRating = "-";
+
+        const requestOMDb = `${OMDB_API_URL}/?i=${movie.imdb_id}&${requestKey}`;
+
+        const omdbInfo = await apiRequest(requestOMDb);
+
+        if (omdbInfo.Response === "True") {
+          const { imdbRating, Metascore, Year, Director, Actors } = omdbInfo;
+
+          movie.imdbRating = !isNaN(imdbRating) ? imdbRating : "-";
+          movie.metascore = !isNaN(Metascore) ? Metascore : null;
+          movie.year = !isNaN(Year) ? Year : null;
+          movie.director = Director !== "N/A" ? Director : null;
+          movie.actors = Actors !== "N/A" ? Actors : null;
+        }
+
+        return movie;
+      })
+    );
+
+    if (moviesUpdatedWithInfo) {
+      setMovies(moviesUpdatedWithInfo);
+      setOMDbInfoReceived(true);
     }
-
-    Promise.allSettled(movies.map(currMovie => {
-        const requestBody = 'https://www.omdbapi.com';
-        const requestId = `i=${currMovie.imdb_id}`;
-        const requestKey = `apikey=${omdbApiKey}`;
-        const requestOMDb = `${requestBody}/?${requestId}&${requestKey}`;
-
-        return ajaxRequest(requestOMDb);
-    }))
-        .then(results => {
-            const moviesUpdated = movies;
-
-            results.map((item, index) => {
-                const referredMovie = moviesUpdated[index];
-                referredMovie.imdbRating = '-';
-
-                if (item.status === "fulfilled" && typeof item.value !== 'undefined') {
-                    const { value } = item;
-                    if (value.Response === "True") {
-                        const { imdbRating, Metascore, Year, Director, Actors } = value;
-
-                        if (!isNaN(imdbRating)) referredMovie.imdbRating = imdbRating;
-                        referredMovie.metascore = !isNaN(Metascore) ? Metascore : null;
-                        referredMovie.year = !isNaN(Year) ? Year : null;
-                        referredMovie.director = Director !== 'N/A' ? Director : null;
-                        referredMovie.actors = Actors !== 'N/A' ? Actors : null;
-                    }
-                }
-                return referredMovie;
-            });
-
-            return moviesUpdated;
-        })
-        .then(moviesUpdated => {
-            updateMovies(moviesUpdated);
-            setFinish(true);
-        });
-
-    // const promises = await movies.map(async (currMovie) => {
-
-    //     const requestBody = 'https://www.omdbapi.com';
-    //     const requestId = `i=${currMovie.imdb_id}`;
-    //     const requestKey = `apikey=${omdbApiKey}`;
-    //     const requestOMDb = `${requestBody}/?${requestId}&${requestKey}`;
-
-    //     const movieInfo = await ajaxRequest(requestOMDb);
-
-    //     currMovie.imdbRating = !isNaN(movieInfo.imdbRating) ? movieInfo.imdbRating : '-';
-    //     currMovie.metascore = !isNaN(movieInfo.Metascore) ? movieInfo.Metascore : null;
-    //     currMovie.year = !isNaN(movieInfo.Year) ? movieInfo.Year : null;
-    //     currMovie.director = movieInfo.Director !== 'N/A' ? movieInfo.Director : null;
-    //     currMovie.actors = movieInfo.Actors !== 'N/A' ? movieInfo.Actors : null;
-
-    //     return currMovie;
-    // })
-
-    // await Promise.all(promises)
-    // .then((updatedMovies) => {
-    //     updateMovies(updatedMovies)
-    // })
-    // .then(() => {
-    //     setFinish(true)
-    // });
-
-}
+  } catch (err) {
+    console.log(err);
+    setOMDbInfoReceived(false);
+  }
+};
 
 export default getOMDbInfo;
