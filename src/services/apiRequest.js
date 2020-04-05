@@ -1,11 +1,10 @@
 const apiRequest = async (url) => {
-    try {
-        const responseText = await fetch(url, { method: 'GET' });
-        return await responseText.json();
-    }
-    catch (error) {
-        return console.error('Ajax request error:', error);
-    }
-}
+  try {
+    const responseText = await fetch(url);
+    return await responseText.json();
+  } catch (err) {
+    return console.error("Request error:", err);
+  }
+};
 
 export default apiRequest;

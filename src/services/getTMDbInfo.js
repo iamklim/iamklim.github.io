@@ -1,7 +1,7 @@
 import apiRequest from "./apiRequest";
 import { TMDB_API_URL, TMDB_API_KEY, TMDB_LANGUAGE } from "../config";
 
-const getTMDbInfo = async (movies, setMovies, setTMDbInfoReceived) => {
+const getTMDbInfo = async (movies, setMovies, setTMDbInfoReceived, onError) => {
   try {
     const moviesUpdated = [...movies];
 
@@ -35,10 +35,14 @@ const getTMDbInfo = async (movies, setMovies, setTMDbInfoReceived) => {
     if (moviesUpdatedWithInfo) {
       setMovies(moviesUpdatedWithInfo);
       setTMDbInfoReceived(true);
+    } else {
+      setTMDbInfoReceived(false);
+      onError();
     }
   } catch (err) {
     console.log(err);
     setTMDbInfoReceived(false);
+    onError();
   }
 };
 

@@ -1,7 +1,7 @@
 import apiRequest from "./apiRequest";
 import { OMDB_API_URL, OMDB_API_KEY } from "../config";
 
-const getOMDbInfo = async (movies, setMovies, setOMDbInfoReceived) => {
+const getOMDbInfo = async (movies, setMovies, setOMDbInfoReceived, onError) => {
   try {
     const moviesUpdated = [...movies];
     const requestKey = `apikey=${OMDB_API_KEY}`;
@@ -31,10 +31,14 @@ const getOMDbInfo = async (movies, setMovies, setOMDbInfoReceived) => {
     if (moviesUpdatedWithInfo) {
       setMovies(moviesUpdatedWithInfo);
       setOMDbInfoReceived(true);
+    } else {
+      setOMDbInfoReceived(false);
+      onError();
     }
   } catch (err) {
     console.log(err);
     setOMDbInfoReceived(false);
+    onError();
   }
 };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { CSSTransition } from "react-transition-group";
 import "./App.sass";
 
@@ -13,50 +13,51 @@ import ErrorFallback from "./ErrorFallback/ErrorFallback";
 
 const App = () => {
   const [movies, setMovies] = useState([]);
-
   const [nowPlayingReceived, setNowPlayingReceived] = useState(false);
   const [TMDbInfoReceived, setTMDbInfoReceived] = useState(false);
   const [OMDbInfoReceived, setOMDbInfoReceived] = useState(false);
   const [moviesAreSorted, setMoviesAreSorted] = useState(false);
   const [sliderInited, setSliderInited] = useState(false);
-  const [answerReceived, setAnswerReceived] = useState(false);
-  const [contentIsLoaded, setContentIsLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  const onError = () => {
+    setIsLoading(false);
+    setError(true);
+  };
 
   useEffect(() => {
-    getNowPlaying(setMovies, setNowPlayingReceived, setAnswerReceived);
+    getNowPlaying(setMovies, setNowPlayingReceived, onError);
   }, []);
 
   useEffect(() => {
     if (nowPlayingReceived) {
-      getTMDbInfo(movies, setMovies, setTMDbInfoReceived);
+      getTMDbInfo(movies, setMovies, setTMDbInfoReceived, onError);
     }
   }, [nowPlayingReceived]);
 
   useEffect(() => {
     if (TMDbInfoReceived) {
-      getOMDbInfo(movies, setMovies, setOMDbInfoReceived);
+      getOMDbInfo(movies, setMovies, setOMDbInfoReceived, onError);
     }
   }, [TMDbInfoReceived]);
 
   useEffect(() => {
     if (OMDbInfoReceived) {
-      sortByRating(movies, setMovies, setMoviesAreSorted);
+      sortByRating(movies, setMovies, setMoviesAreSorted, onError);
     }
   }, [OMDbInfoReceived]);
 
   useEffect(() => {
     if (sliderInited) {
-      setContentIsLoaded(true);
-      setAnswerReceived(true);
+      setIsLoading(false);
     }
   }, [sliderInited]);
 
   return (
     <>
       <div
-        className={`content ${
-          contentIsLoaded && answerReceived ? "content--visible" : ""
-        }`}
+        className={`content ${!isLoading && !error ? "content--visible" : ""}`}
       >
         <div className="content__credentials">
           <p>Made by Vladyslav Klymenko</p>
@@ -73,7 +74,7 @@ const App = () => {
       </div>
 
       <CSSTransition
-        in={!contentIsLoaded && !answerReceived}
+        in={isLoading && !error}
         timeout={500}
         classNames="animation"
         unmountOnExit
@@ -82,7 +83,7 @@ const App = () => {
       </CSSTransition>
 
       <CSSTransition
-        in={!contentIsLoaded && answerReceived}
+        in={!isLoading && error}
         timeout={500}
         classNames="animation"
         mountOnEnter

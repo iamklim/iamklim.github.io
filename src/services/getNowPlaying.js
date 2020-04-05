@@ -7,11 +7,7 @@ import {
   TMDB_IMAGES_URL,
 } from "../config";
 
-const getNowPlaying = async (
-  setMovies,
-  setNowPlayingReceived,
-  setAnswerReceived
-) => {
+const getNowPlaying = async (setMovies, setNowPlayingReceived, onError) => {
   try {
     const requestBody = `${TMDB_API_URL}/3/movie/now_playing`;
     const requestRegion = `region=${TMDB_REGION}`;
@@ -41,11 +37,11 @@ const getNowPlaying = async (
       setNowPlayingReceived(true);
     } else {
       setNowPlayingReceived(false);
-      //setAnswerReceived(true);
+      onError();
     }
   } catch (err) {
     setNowPlayingReceived(false);
-    //setAnswerReceived(true);
+    onError();
   }
 };
 

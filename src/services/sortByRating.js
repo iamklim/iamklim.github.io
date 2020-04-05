@@ -1,4 +1,4 @@
-const sortByRating = (movies, setMovies, setMoviesAreSorted) => {
+const sortByRating = (movies, setMovies, setMoviesAreSorted, onError) => {
   try {
     const moviesUpdated = [...movies];
     moviesUpdated.sort((a, b) => (a.imdbRating > b.imdbRating ? -1 : 1));
@@ -7,6 +7,7 @@ const sortByRating = (movies, setMovies, setMoviesAreSorted) => {
   } catch (err) {
     console.log(err);
     setMoviesAreSorted(false);
+    onError();
   }
 };
 
