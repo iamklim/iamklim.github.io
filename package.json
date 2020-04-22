@@ -1,7 +1,7 @@
 {
-  "homepage": "https://iamklim.github.io",
-  "name": "now-playing",
-  "version": "1.0",
+  "homepage": "https://iamklim.github.io/now-playing",
+  "name": "my-app",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
     "gh-pages": "^2.2.0",
@@ -14,7 +14,7 @@
   },
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -b master -d build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
