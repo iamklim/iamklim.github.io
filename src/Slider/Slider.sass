@@ -1,0 +1,26 @@
+.swiper-container
+  width: 100%
+.swiper-scrollbar
+  background: rgba(255, 255, 255, 0.1)
+.swiper-scrollbar-drag
+  background: rgba(255, 255, 255, 0.5)
+  &:hover
+    cursor: grab
+  &:active, &:focus
+    cursor: grabbing
+.swiper-container-horizontal > .swiper-scrollbar
+  position: relative
+  bottom: auto
+  left: auto
+  margin: auto
+  width: 20%
+  @media (max-width: 1024px)
+    width: 30%
+  @media (max-width: 768px)
+    width: 45%
+  @media (max-width: 640px)
+    width: 65%
+  @media (max-width: 1024px) and (orientation: landscape)
+    margin-top: 15px
+  @media (max-width: 640px) and (orientation: portrait)
+    margin-top: 15px
